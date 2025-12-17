@@ -11,11 +11,13 @@
 			id="ModEnabled"
 			value="ModEnabled"
 			text="Enable mod"
+			hover-hint="Enable/disable all features at once"
 			on-change="UpdateUI"/>
 		<toggle-setting
 			id="SoloChooser"
 			value="SoloChooserEnabled"
 			text="Enable Party mode player chooser in Solo"
+			hover-hint="Ask for player's name after completing a level in Solo mode"
 			on-change="UpdateUI"/>
 
 		<text
@@ -28,6 +30,7 @@
 			id="NameAutoAccept"
 			value="PlayerNameAutoAccept"
 			text="Auto-accept clicked name"
+			hover-hint="Accept chosen player name without clicking 'OK'"
 			on-change="UpdateUI"/>
 		<increment-setting
 			id="NameCount"
@@ -36,6 +39,7 @@
 			max="8"
 			integer-only="true"
 			text="Number of last used names to show"
+			hover-hint="Limit the number of last used names in the picker (game default: 5)"
 			on-change="UpdateUI"/>
 
 		<text
@@ -48,11 +52,13 @@
 			id="HighScoreFireworks"
 			value="ResultsHighScoreFireworks"
 			text="Per-player high score for fireworks"
+			hover-hint="Determine whether to show fireworks based on the chosen player's previous high score"
 			on-change="UpdateUI"/>
 		<toggle-setting
 			id="HighScoreSetter"
 			value="ResultsHighScoreSetter"
 			text="Per-player high score difference (SPH)"
+			hover-hint="Use the chosen player's previous high score for calculating score difference"
 			on-change="UpdateUI"/>
 
 		<text
@@ -65,6 +71,7 @@
 			id="LeaderboardSongPlay"
 			value="LeaderboardSongPlayHistory"
 			text="Show player name in SongPlayHistory scores"
+			hover-hint="Prepend each score with players' names in SongPlayHistory score tooltip"
 			on-change="UpdateUI"/>
 	</settings-container>
 </bg>

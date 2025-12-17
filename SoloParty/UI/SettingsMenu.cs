@@ -70,7 +70,7 @@ internal class SettingsMenu(
 		_nameAutoAccept.Interactable = _modEnabled.Value;
 		_nameCount.Interactable = _modEnabled.Value;
 		_highScoreFireworks.Interactable = _modEnabled.Value && _soloChooser.Value;
-		_highScoreSetter.Interactable = _modEnabled.Value && _soloChooser.Value;
-		_leaderboardSongPlay.Interactable = _modEnabled.Value;
+		_highScoreSetter.Interactable = _modEnabled.Value && _soloChooser.Value && Plugin.SongPlayHistoryInstalled;
+		_leaderboardSongPlay.Interactable = _modEnabled.Value && Plugin.SongPlayHistoryInstalled;
 	}
 }

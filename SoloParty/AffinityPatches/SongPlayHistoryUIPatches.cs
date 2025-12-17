@@ -153,7 +153,7 @@ internal sealed class SongPlayHistoryUIPatches(
 
 		if (record != null)
 		{
-			_instance._log.Info($"Inserting player name '{record.PlayerName}' for {infoString}");
+			_instance._log.Debug($"Inserting player name '{record.PlayerName}' for {infoString}");
 			builder.Append($"<size=2.5><color=#1a252bff> {record.PlayerName} - </color></size>");
 		}
 		else

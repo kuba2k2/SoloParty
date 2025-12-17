@@ -1,11 +1,8 @@
-using Hive.Versioning;
-using IPA.Loader;
 using SiraUtil.Logging;
 using SoloParty.AffinityPatches;
-using SoloParty.Data;
 using SoloParty.Data.HighScore;
-using Zenject;
 using SoloParty.UI;
+using Zenject;
 
 namespace SoloParty.Installers;
 
@@ -21,8 +18,7 @@ internal class MenuInstaller(
 		Container.BindInterfacesTo<SoloFreePlayFlowCoordinatorPatches>().AsSingle();
 		Container.BindInterfacesTo<EnterPlayerGuestNameViewControllerPatches>().AsSingle();
 
-		var sph = PluginManager.GetPluginFromId("SongPlayHistory");
-		if (sph != null && sph.HVersion >= new Version(2, 2, 0))
+		if (Plugin.SongPlayHistoryInstalled)
 		{
 			log.Info("SongPlayHistory found, enabling high score setter and UI patches");
 			Container.BindInterfacesTo<SongPlayHistoryHighScoreSetter>().AsSingle();
