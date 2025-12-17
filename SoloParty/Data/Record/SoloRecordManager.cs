@@ -10,13 +10,13 @@ using Zenject;
 
 namespace SoloParty.Data.Record;
 
-public class RecordManager(
+public class SoloRecordManager(
 	SiraLog log
 ) : IInitializable, IDisposable
 {
 	private readonly string _dataFilePath = Path.Combine(UnityGame.UserDataPath, "SoloPartyData.json");
 	private readonly string _backupFilePath = Path.Combine(UnityGame.UserDataPath, "SoloPartyData.json.bak");
-	private ConcurrentDictionary<string, IList<PlayerRecord>> _records = new();
+	private ConcurrentDictionary<string, IList<SoloRecord>> _records = new();
 	private bool _recordsModified;
 
 	public void Initialize()
@@ -49,7 +49,7 @@ public class RecordManager(
 	private bool LoadRecords(string filePath)
 	{
 		log.Info($"Loading records from {filePath}");
-		_records = new ConcurrentDictionary<string, IList<PlayerRecord>>();
+		_records = new ConcurrentDictionary<string, IList<SoloRecord>>();
 		if (!File.Exists(filePath))
 		{
 			log.Warn($"File {filePath} does not exist");
@@ -59,7 +59,7 @@ public class RecordManager(
 		try
 		{
 			var text = File.ReadAllText(filePath);
-			var deserialized = JsonConvert.DeserializeObject<ConcurrentDictionary<string, IList<PlayerRecord>>>(text);
+			var deserialized = JsonConvert.DeserializeObject<ConcurrentDictionary<string, IList<SoloRecord>>>(text);
 			_records = deserialized ?? throw new ArgumentNullException(nameof(deserialized));
 			return true;
 		}
@@ -105,23 +105,23 @@ public class RecordManager(
 		}
 	}
 
-	public void AddRecord(string beatmapKey, PlayerRecord record)
+	public void AddRecord(string beatmapKey, SoloRecord record)
 	{
-		_records.GetOrAdd(beatmapKey, new List<PlayerRecord>()).Add(record);
+		_records.GetOrAdd(beatmapKey, new List<SoloRecord>()).Add(record);
 		_recordsModified = true;
 		SaveRecords(_dataFilePath);
 	}
 
-	public IList<PlayerRecord> GetRecords(string beatmapKey)
+	public IList<SoloRecord> GetRecords(string beatmapKey)
 	{
 		return _records.TryGetValue(beatmapKey, out var records)
 			? records.ToList()
 			: [];
 	}
 
-	public PlayerRecord? GetRecordPlayerBest(string beatmapKey, string playerName)
+	public SoloRecord? GetRecordPlayerBest(string beatmapKey, string playerName)
 	{
-		PlayerRecord? best = null;
+		SoloRecord? best = null;
 		foreach (var record in GetRecords(beatmapKey))
 		{
 			if (record.PlayerName != playerName)
@@ -133,7 +133,7 @@ public class RecordManager(
 		return best;
 	}
 
-	public PlayerRecord? GetRecordMatching(string beatmapKey, long date, int modifiedScore)
+	public SoloRecord? GetRecordMatching(string beatmapKey, long date, int modifiedScore)
 	{
 		return GetRecords(beatmapKey)
 			.Where(record => record.ModifiedScore == modifiedScore)

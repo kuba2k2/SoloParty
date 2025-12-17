@@ -10,7 +10,7 @@ namespace SoloParty.AffinityPatches;
 
 internal sealed class SoloFreePlayFlowCoordinatorPatches(
 	PluginConfig config,
-	RecordManager recordManager,
+	SoloRecordManager recordManager,
 	SiraLog log,
 	EnterPlayerGuestNameViewController enterNameViewController,
 	IHighScoreSetter highScoreSetter
@@ -114,7 +114,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 				highScoreSetter.UpdateHighScore(levelCompletionResults, previousHighScore);
 
 			// save a new record
-			var record = new PlayerRecord { Date = date, ModifiedScore = modifiedScore, PlayerName = playerName };
+			var record = new SoloRecord { Date = date, ModifiedScore = modifiedScore, PlayerName = playerName };
 			recordManager.AddRecord(beatmapKeyString, record);
 
 			// redirect the PresentViewController() call to ReplaceTopViewController()

@@ -6,8 +6,6 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
-using IPA.Loader;
-using SiraUtil.Affinity;
 using SiraUtil.Logging;
 using SoloParty.Data.Record;
 using SoloParty.Utils;
@@ -20,12 +18,12 @@ internal sealed class SongPlayHistoryUIPatches(
 	Harmony harmony,
 	PluginConfig config,
 	SiraLog log,
-	RecordManager recordManager
+	SoloRecordManager recordManager
 ) : IInitializable, IDisposable
 {
 	private static SongPlayHistoryUIPatches? _instance;
 	private readonly SiraLog _log = log;
-	private readonly RecordManager _recordManager = recordManager;
+	private readonly SoloRecordManager _recordManager = recordManager;
 	private MethodInfo? _moveNextMethod;
 
 	public void Initialize()

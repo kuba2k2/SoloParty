@@ -16,6 +16,6 @@ internal class AppInstaller(
 		Container.BindInstance(config).AsSingle();
 		Container.BindInstance(metadata).AsSingle();
 		Container.BindInstance(harmony).AsSingle();
-		Container.BindInterfacesAndSelfTo<RecordManager>().AsSingle();
+		Container.BindInterfacesAndSelfTo<SoloRecordManager>().AsSingle();
 	}
 }
