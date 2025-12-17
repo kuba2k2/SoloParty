@@ -1,0 +1,70 @@
+<bg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd">
+	<settings-container>
+		<text
+			text="SoloParty"
+			italics="true"
+			font-size="6.5"
+			align="Left"
+			size-delta-y="9"/>
+		<toggle-setting
+			id="ModEnabled"
+			value="ModEnabled"
+			text="Enable mod"
+			on-change="UpdateUI"/>
+		<toggle-setting
+			id="SoloChooser"
+			value="SoloChooserEnabled"
+			text="Enable Party mode player chooser in Solo"
+			on-change="UpdateUI"/>
+
+		<text
+			text="Player name chooser (Solo, Party)"
+			italics="true"
+			font-size="6.5"
+			align="Left"
+			size-delta-y="9"/>
+		<toggle-setting
+			id="NameAutoAccept"
+			value="PlayerNameAutoAccept"
+			text="Auto-accept clicked name"
+			on-change="UpdateUI"/>
+		<increment-setting
+			id="NameCount"
+			value="PlayerNameMaxCount"
+			min="1"
+			max="8"
+			integer-only="true"
+			text="Number of last used names to show"
+			on-change="UpdateUI"/>
+
+		<text
+			text="Level results screen"
+			italics="true"
+			font-size="6.5"
+			align="Left"
+			size-delta-y="9"/>
+		<toggle-setting
+			id="HighScoreFireworks"
+			value="ResultsHighScoreFireworks"
+			text="Per-player high score for fireworks"
+			on-change="UpdateUI"/>
+		<toggle-setting
+			id="HighScoreSetter"
+			value="ResultsHighScoreSetter"
+			text="Per-player high score difference (SPH)"
+			on-change="UpdateUI"/>
+
+		<text
+			text="Leaderboard options"
+			italics="true"
+			font-size="6.5"
+			align="Left"
+			size-delta-y="9"/>
+		<toggle-setting
+			id="LeaderboardSongPlay"
+			value="LeaderboardSongPlayHistory"
+			text="Show player name in SongPlayHistory scores"
+			on-change="UpdateUI"/>
+	</settings-container>
+</bg>
