@@ -1,7 +1,7 @@
 using SiraUtil.Logging;
 using SoloParty.AffinityPatches;
 using SoloParty.Data.HighScore;
-using SoloParty.UI;
+using SoloParty.UI.Settings;
 using Zenject;
 
 namespace SoloParty.Installers;

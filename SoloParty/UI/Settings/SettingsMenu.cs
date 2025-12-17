@@ -1,7 +1,7 @@
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components.Settings;
 
-namespace SoloParty.UI;
+namespace SoloParty.UI.Settings;
 
 internal class SettingsMenu(
 	PluginConfig config

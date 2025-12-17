@@ -2,7 +2,7 @@ using System;
 using BeatSaberMarkupLanguage.Settings;
 using Zenject;
 
-namespace SoloParty.UI;
+namespace SoloParty.UI.Settings;
 
 internal class SettingsMenuManager(
 	SettingsMenu settingsMenu,
@@ -10,7 +10,7 @@ internal class SettingsMenuManager(
 ) : IInitializable, IDisposable
 {
 	private const string MenuName = nameof(SoloParty);
-	private const string ResourcePath = nameof(SoloParty) + ".UI.settings.bsml";
+	private const string ResourcePath = nameof(SoloParty) + ".UI.Settings.settings.bsml";
 
 	public void Initialize()
 	{
