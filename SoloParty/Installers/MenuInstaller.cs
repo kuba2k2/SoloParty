@@ -17,6 +17,7 @@ internal class MenuInstaller(
 
 		Container.BindInterfacesTo<SoloFreePlayFlowCoordinatorPatches>().AsSingle();
 		Container.BindInterfacesTo<EnterPlayerGuestNameViewControllerPatches>().AsSingle();
+		Container.BindInterfacesTo<RankModelPatches>().AsSingle();
 
 		if (Plugin.SongPlayHistoryInstalled)
 		{

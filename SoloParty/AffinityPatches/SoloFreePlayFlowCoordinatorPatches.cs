@@ -135,6 +135,10 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 	{
 		var beatmapKeyString = beatmapKey.ToBeatmapKeyString();
 		var modifiedScore = levelCompletionResults.modifiedScore;
+		var multipliedScore = levelCompletionResults.multipliedScore;
+		var maxModifiedScore = -1;
+		var maxMultipliedScore = -1;
+
 		log.Info(
 			$"Beatmap '{beatmapKeyString}' finished at {date} " +
 			$"with score {modifiedScore}, player name is '{playerName}'"
@@ -155,8 +159,35 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 				highScoreSetter.UpdateHighScore(levelCompletionResults, previousHighScore);
 		}
 
+		// get max modified/multiplied scores if RankModelPatches saved them
+		if (RankModelPatches.ModifiedScore == modifiedScore && RankModelPatches.MultipliedScore == multipliedScore)
+		{
+			maxModifiedScore = RankModelPatches.MaxModifiedScore;
+			maxMultipliedScore = RankModelPatches.MaxMultipliedScore;
+		}
+		else
+		{
+			log.Warn($"RankModelPatches didn't save the max scores! " +
+			         $"modified = {modifiedScore}/{RankModelPatches.ModifiedScore}, " +
+			         $"multiplied = {multipliedScore}/{RankModelPatches.MultipliedScore}");
+		}
+
 		// save a new record
-		var record = new SoloRecord { Date = date, ModifiedScore = modifiedScore, PlayerName = playerName };
+		var record = new SoloRecord
+		{
+			Date = date,
+			ModifiedScore = modifiedScore,
+			MultipliedScore = multipliedScore,
+			MaxModifiedScore = maxModifiedScore,
+			MaxMultipliedScore = maxMultipliedScore,
+			FullCombo = levelCompletionResults.fullCombo,
+			GoodCutsCount = levelCompletionResults.goodCutsCount,
+			BadCutsCount = levelCompletionResults.badCutsCount,
+			MissedCount = levelCompletionResults.missedCount,
+			MaxCombo = levelCompletionResults.maxCombo,
+			PlayerName = playerName
+		};
+		log.Info($"Saving record: {record}");
 		recordManager.AddRecord(beatmapKeyString, record);
 	}
 
