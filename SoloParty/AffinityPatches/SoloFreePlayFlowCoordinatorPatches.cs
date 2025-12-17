@@ -17,7 +17,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 ) : IAffinity
 {
 	private LevelCompletionResults? _lastLevelCompletionResults;
-	private bool _isNewHighScore;
+	private bool? _isNewHighScore;
 	private bool _replaceNextViewController;
 
 	// NOTE: somehow, order matters - moving this below LevelDidFinishPatch() makes the patch invisible!
@@ -37,7 +37,9 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			return;
 
 		// replace the IsNewHighScore() method's result according to the player name's high score
-		__result = _isNewHighScore;
+		if (_isNewHighScore != null)
+			__result = _isNewHighScore.Value;
+		_isNewHighScore = null;
 	}
 
 	[AffinityPrefix]
@@ -60,62 +62,51 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			return true;
 
 		// check if mod is enabled
-		if (!config.ModEnabled || !config.SoloChooserEnabled)
+		if (!config.ModEnabled || !config.SoloTrackingEnabled)
 		{
-			log.Info("Skipping name input: mod or name chooser disabled");
+			log.Info("Skipping result handling: mod disabled or score tracking disabled");
 			return true;
 		}
 
 		// call base class to handle completion results, skip patch if requested
 		if (__instance.HandleBasicLevelCompletionResults(levelCompletionResults, practice))
 		{
-			log.Info("Skipping name input: results handled");
+			log.Info("Skipping result handling: results handled");
 			return true;
 		}
 
 		// skip practice mode
 		if (practice)
 		{
-			log.Info("Skipping name input: practice mode");
+			log.Info("Skipping result handling: practice mode");
 			return true;
 		}
 
 		// skip if level wasn't cleared
 		if (levelCompletionResults.levelEndStateType != LevelCompletionResults.LevelEndStateType.Cleared)
 		{
-			log.Info("Skipping name input: level not cleared");
+			log.Info("Skipping result handling: level not cleared");
 			return true;
 		}
 
 		// remember which particular results are being processed right now
 		_lastLevelCompletionResults = levelCompletionResults;
 
-		var beatmapKeyString = beatmapKey.ToBeatmapKeyString();
 		var date = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-		var modifiedScore = levelCompletionResults.modifiedScore;
-		log.Info(
-			$"Beatmap '{beatmapKeyString}' finished at {date} " +
-			$"with score {modifiedScore}, redirecting to player name view"
-		);
 
+		// player name chooser disabled, save results and call the original method
+		if (!config.SoloChooserEnabled)
+		{
+			SaveResults(levelCompletionResults, beatmapKey, date, null);
+			return true;
+		}
+
+		// player name chooser enabled, redirect view controller
+		log.Info("Redirecting to player name chooser");
 		enterNameViewController.Init((_, playerName) =>
 		{
 			log.Info($"Got player name '{playerName}'");
-
-			// fetch the previous high score for this player
-			var previousHighScore = recordManager
-				.GetRecordPlayerBest(beatmapKeyString, playerName)
-				?.ModifiedScore ?? 0;
-			log.Info($"- previous high score is {previousHighScore}");
-			_isNewHighScore = modifiedScore > previousHighScore;
-
-			// update previous high score in other mods
-			if (config.ResultsHighScoreSetter)
-				highScoreSetter.UpdateHighScore(levelCompletionResults, previousHighScore);
-
-			// save a new record
-			var record = new SoloRecord { Date = date, ModifiedScore = modifiedScore, PlayerName = playerName };
-			recordManager.AddRecord(beatmapKeyString, record);
+			SaveResults(levelCompletionResults, beatmapKey, date, playerName);
 
 			// redirect the PresentViewController() call to ReplaceTopViewController()
 			_replaceNextViewController = true;
@@ -133,6 +124,40 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		// present the view controller and skip the original method
 		__instance.PresentViewController(enterNameViewController, immediately: true);
 		return false;
+	}
+
+	private void SaveResults(
+		LevelCompletionResults levelCompletionResults,
+		BeatmapKey beatmapKey,
+		long date,
+		string? playerName
+	)
+	{
+		var beatmapKeyString = beatmapKey.ToBeatmapKeyString();
+		var modifiedScore = levelCompletionResults.modifiedScore;
+		log.Info(
+			$"Beatmap '{beatmapKeyString}' finished at {date} " +
+			$"with score {modifiedScore}, player name is '{playerName}'"
+		);
+
+		// fetch the previous high score for this player (if name set; otherwise don't change the high score at all)
+		_isNewHighScore = null;
+		if (playerName != null)
+		{
+			var previousHighScore = recordManager
+				.GetRecordPlayerBest(beatmapKeyString, playerName)
+				?.ModifiedScore ?? 0;
+			log.Info($"- previous high score was {previousHighScore}");
+			_isNewHighScore = modifiedScore > previousHighScore;
+
+			// update previous high score in other mods
+			if (config.ResultsHighScoreSetter)
+				highScoreSetter.UpdateHighScore(levelCompletionResults, previousHighScore);
+		}
+
+		// save a new record
+		var record = new SoloRecord { Date = date, ModifiedScore = modifiedScore, PlayerName = playerName };
+		recordManager.AddRecord(beatmapKeyString, record);
 	}
 
 	[AffinityPrefix]

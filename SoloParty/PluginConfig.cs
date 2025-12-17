@@ -10,6 +10,7 @@ namespace SoloParty;
 internal class PluginConfig
 {
 	public virtual bool ModEnabled { get; set; } = true;
+	public virtual bool SoloTrackingEnabled { get; set; } = true;
 	public virtual bool SoloChooserEnabled { get; set; } = true;
 	public virtual bool PlayerNameAutoAccept { get; set; } = false;
 	public virtual int PlayerNameMaxCount { get; set; } = 5;

@@ -13,6 +13,12 @@ internal class SettingsMenu(
 		set => config.ModEnabled = value;
 	}
 
+	public bool SoloTrackingEnabled
+	{
+		get => config.SoloTrackingEnabled;
+		set => config.SoloTrackingEnabled = value;
+	}
+
 	public bool SoloChooserEnabled
 	{
 		get => config.SoloChooserEnabled;
@@ -50,6 +56,7 @@ internal class SettingsMenu(
 	}
 
 	[UIComponent("ModEnabled")] private readonly ToggleSetting _modEnabled = null!;
+	[UIComponent("SoloTracking")] private readonly ToggleSetting _soloTracking = null!;
 	[UIComponent("SoloChooser")] private readonly ToggleSetting _soloChooser = null!;
 	[UIComponent("NameAutoAccept")] private readonly ToggleSetting _nameAutoAccept = null!;
 	[UIComponent("NameCount")] private readonly IncrementSetting _nameCount = null!;
@@ -66,11 +73,13 @@ internal class SettingsMenu(
 	[UIAction("UpdateUI")]
 	private void UpdateUI(object? _ = null)
 	{
-		_soloChooser.Interactable = _modEnabled.Value;
-		_nameAutoAccept.Interactable = _modEnabled.Value;
-		_nameCount.Interactable = _modEnabled.Value;
-		_highScoreFireworks.Interactable = _modEnabled.Value && _soloChooser.Value;
-		_highScoreSetter.Interactable = _modEnabled.Value && _soloChooser.Value && Plugin.SongPlayHistoryInstalled;
-		_leaderboardSongPlay.Interactable = _modEnabled.Value && Plugin.SongPlayHistoryInstalled;
+		var enabled = _modEnabled.Value;
+		_soloTracking.Interactable = enabled;
+		_soloChooser.Interactable = enabled && _soloTracking.Value;
+		_nameAutoAccept.Interactable = enabled;
+		_nameCount.Interactable = enabled;
+		_highScoreFireworks.Interactable = enabled && _soloTracking.Value;
+		_highScoreSetter.Interactable = enabled && _soloTracking.Value && Plugin.SongPlayHistoryInstalled;
+		_leaderboardSongPlay.Interactable = enabled && Plugin.SongPlayHistoryInstalled;
 	}
 }

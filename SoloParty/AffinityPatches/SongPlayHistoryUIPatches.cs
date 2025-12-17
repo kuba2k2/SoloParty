@@ -149,14 +149,14 @@ internal sealed class SongPlayHistoryUIPatches(
 		// for logging
 		var infoString = $"beatmapKey: {beatmapKeyString}, date: {date}, modifiedScore: {modifiedScore}";
 
-		if (record != null)
+		if (record?.PlayerName != null)
 		{
 			_instance._log.Debug($"Inserting player name '{record.PlayerName}' for {infoString}");
 			builder.Append($"<size=2.5><color=#1a252bff> {record.PlayerName} - </color></size>");
 		}
 		else
 		{
-			_instance._log.Warn($"Record not found for {infoString}");
+			_instance._log.Warn($"No player name for {infoString}");
 		}
 
 		return builder;

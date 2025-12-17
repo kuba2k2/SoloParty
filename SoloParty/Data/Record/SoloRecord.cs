@@ -8,7 +8,7 @@ public class SoloRecord : IComparable<SoloRecord>
 {
 	[JsonProperty("Date")] public long Date { get; internal set; }
 	[JsonProperty("ModifiedScore")] public int ModifiedScore { get; internal set; }
-	[JsonProperty("PlayerName")] public string PlayerName { get; internal set; } = "";
+	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
 
 	public int CompareTo(SoloRecord other)
 	{

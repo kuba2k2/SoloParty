@@ -13,6 +13,13 @@
 			text="Enable mod"
 			hover-hint="Enable/disable all features at once"
 			on-change="UpdateUI"/>
+
+		<toggle-setting
+			id="SoloTracking"
+			value="SoloTrackingEnabled"
+			text="Track and save level completion results"
+			hover-hint="Record extended statistics of completed levels"
+			on-change="UpdateUI"/>
 		<toggle-setting
 			id="SoloChooser"
 			value="SoloChooserEnabled"
