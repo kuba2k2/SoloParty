@@ -14,6 +14,7 @@ namespace SoloParty;
 internal class Plugin
 {
 	internal static IpaLogger Log { get; private set; } = null!;
+	internal static bool LeaderboardCoreInstalled { get; private set; }
 	internal static bool SongPlayHistoryInstalled { get; private set; }
 
 	[Init]
@@ -35,7 +36,9 @@ internal class Plugin
 	[OnStart]
 	public void OnStart()
 	{
-		var sph = PluginManager.GetPluginFromId("SongPlayHistory");
-		SongPlayHistoryInstalled = sph != null && sph.HVersion >= new Version(2, 2, 0);
+		var leaderboardCore = PluginManager.GetPluginFromId("LeaderboardCore")?.HVersion;
+		var songPlayHistory = PluginManager.GetPluginFromId("SongPlayHistory")?.HVersion;
+		LeaderboardCoreInstalled = leaderboardCore != null && leaderboardCore >= new Version(1, 7, 0);
+		SongPlayHistoryInstalled = songPlayHistory != null && songPlayHistory >= new Version(2, 2, 0);
 	}
 }
