@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using SoloParty.Utils;
 
 namespace SoloParty.Data;
 
@@ -17,6 +18,9 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("BadCutsCount")] public int BadCutsCount { get; internal set; } = -1;
 	[JsonProperty("MissedCount")] public int MissedCount { get; internal set; } = -1;
 	[JsonProperty("MaxCombo")] public int MaxCombo { get; internal set; } = -1;
+	[JsonProperty("NotesLeft")] public int NotesLeft { get; internal set; } = -1;
+	[JsonProperty("SoftFailed")] public bool SoftFailed { get; internal set; }
+	[JsonProperty("Modifiers")] public Modifier Modifiers { get; internal set; } = Modifier.None;
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
 
 	public override string ToString()
@@ -32,6 +36,9 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"BadCutsCount = {BadCutsCount}, " +
 		       $"MissedCount = {MissedCount}, " +
 		       $"MaxCombo = {MaxCombo}, " +
+		       $"NotesLeft = {NotesLeft}, " +
+		       $"SoftFailed = {SoftFailed}, " +
+		       $"Modifiers = {Modifiers.ToModifierString()}, " +
 		       $"PlayerName = {PlayerName} " +
 		       $"}}";
 	}
@@ -68,6 +75,12 @@ public class SoloRecord : IComparable<SoloRecord>
 			MissedCount = other.MissedCount;
 		if (MaxCombo == -1 && other.MaxCombo != -1)
 			MaxCombo = other.MaxCombo;
+		if (NotesLeft == -1 && other.NotesLeft != -1)
+			NotesLeft = other.NotesLeft;
+		if (other.SoftFailed)
+			SoftFailed = other.SoftFailed;
+		if (Modifiers == Modifier.None && other.Modifiers != Modifier.None)
+			Modifiers = other.Modifiers;
 		if (PlayerName == null && other.PlayerName != null)
 			PlayerName = other.PlayerName;
 	}

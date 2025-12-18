@@ -76,10 +76,10 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			return true;
 		}
 
-		// skip practice mode
-		if (practice)
+		// skip practice mode and zen mode
+		if (practice || levelCompletionResults.gameplayModifiers.zenMode)
 		{
-			log.Info("Skipping result handling: practice mode");
+			log.Info("Skipping result handling: practice or zen mode");
 			return true;
 		}
 
@@ -185,6 +185,11 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			BadCutsCount = levelCompletionResults.badCutsCount,
 			MissedCount = levelCompletionResults.missedCount,
 			MaxCombo = levelCompletionResults.maxCombo,
+			NotesLeft = 0, // only saving cleared levels (for now)
+			SoftFailed =
+				levelCompletionResults.gameplayModifiers.noFailOn0Energy &&
+				levelCompletionResults.energy <= 9.999999747378752E-06, // don't ask, that's what the base game uses
+			Modifiers = levelCompletionResults.gameplayModifiers.ToSoloModifier(),
 			PlayerName = playerName
 		};
 		log.Info($"Saving record: {record}");
