@@ -1,6 +1,6 @@
 using HarmonyLib;
 using IPA.Loader;
-using SoloParty.Data.Record;
+using SoloParty.Data.Manager;
 using Zenject;
 
 namespace SoloParty.Installers;

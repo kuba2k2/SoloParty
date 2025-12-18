@@ -6,14 +6,17 @@ using System.Linq;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SiraUtil.Logging;
+using SoloParty.Utils;
 using Zenject;
 
-namespace SoloParty.Data.Record;
+namespace SoloParty.Data.Manager;
 
 public class SoloRecordManager(
 	SiraLog log
-) : IInitializable, IDisposable
+) : IInitializable, IDisposable, ISoloRecordProvider
 {
+	public string ProviderName => "SoloParty";
+
 	private readonly string _dataFilePath = Path.Combine(UnityGame.UserDataPath, "SoloPartyData.json");
 	private readonly string _backupFilePath = Path.Combine(UnityGame.UserDataPath, "SoloPartyData.json.bak");
 	private ConcurrentDictionary<string, IList<SoloRecord>> _records = new();
@@ -105,21 +108,21 @@ public class SoloRecordManager(
 		}
 	}
 
-	public void AddRecord(string beatmapKey, SoloRecord record)
+	public void AddRecord(BeatmapKey beatmapKey, SoloRecord record)
 	{
-		_records.GetOrAdd(beatmapKey, new List<SoloRecord>()).Add(record);
+		_records.GetOrAdd(beatmapKey.ToBeatmapKeyString(), new List<SoloRecord>()).Add(record);
 		_recordsModified = true;
 		SaveRecords(_dataFilePath);
 	}
 
-	public IList<SoloRecord> GetRecords(string beatmapKey)
+	public IList<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
-		return _records.TryGetValue(beatmapKey, out var records)
+		return _records.TryGetValue(beatmapKey.ToBeatmapKeyString(), out var records)
 			? records.ToList()
 			: [];
 	}
 
-	public SoloRecord? GetRecordPlayerBest(string beatmapKey, string playerName)
+	public SoloRecord? GetRecordPlayerBest(BeatmapKey beatmapKey, string playerName)
 	{
 		SoloRecord? best = null;
 		foreach (var record in GetRecords(beatmapKey))
@@ -133,7 +136,7 @@ public class SoloRecordManager(
 		return best;
 	}
 
-	public SoloRecord? GetRecordMatching(string beatmapKey, long date, int modifiedScore)
+	public SoloRecord? GetRecordMatching(BeatmapKey beatmapKey, long date, int modifiedScore)
 	{
 		return GetRecords(beatmapKey)
 			.Where(record => record.ModifiedScore == modifiedScore)

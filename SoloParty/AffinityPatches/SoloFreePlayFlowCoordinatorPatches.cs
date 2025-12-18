@@ -2,8 +2,9 @@
 using HMUI;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
-using SoloParty.Data.Record;
+using SoloParty.Data;
 using SoloParty.Data.HighScore;
+using SoloParty.Data.Manager;
 using SoloParty.Utils;
 
 namespace SoloParty.AffinityPatches;
@@ -133,14 +134,13 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		string? playerName
 	)
 	{
-		var beatmapKeyString = beatmapKey.ToBeatmapKeyString();
 		var modifiedScore = levelCompletionResults.modifiedScore;
 		var multipliedScore = levelCompletionResults.multipliedScore;
 		var maxModifiedScore = -1;
 		var maxMultipliedScore = -1;
 
 		log.Info(
-			$"Beatmap '{beatmapKeyString}' finished at {date} " +
+			$"Beatmap '{beatmapKey.ToBeatmapKeyString()}' finished at {date} " +
 			$"with score {modifiedScore}, player name is '{playerName}'"
 		);
 
@@ -149,7 +149,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		if (playerName != null)
 		{
 			var previousHighScore = recordManager
-				.GetRecordPlayerBest(beatmapKeyString, playerName)
+				.GetRecordPlayerBest(beatmapKey, playerName)
 				?.ModifiedScore ?? 0;
 			log.Info($"- previous high score was {previousHighScore}");
 			_isNewHighScore = modifiedScore > previousHighScore;
@@ -188,7 +188,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			PlayerName = playerName
 		};
 		log.Info($"Saving record: {record}");
-		recordManager.AddRecord(beatmapKeyString, record);
+		recordManager.AddRecord(beatmapKey, record);
 	}
 
 	[AffinityPrefix]

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace SoloParty.Data.Record;
+namespace SoloParty.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class SoloRecord : IComparable<SoloRecord>

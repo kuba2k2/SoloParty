@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
 using SiraUtil.Logging;
-using SoloParty.Data.Record;
+using SoloParty.Data.Manager;
 using SoloParty.Utils;
 using SongPlayHistory.SongPlayData;
 using Zenject;
@@ -141,13 +141,12 @@ internal sealed class SongPlayHistoryUIPatches(
 		if (_instance == null)
 			return builder;
 
-		var beatmapKeyString = beatmapKey.ToBeatmapKeyString();
 		// format parameters as used by PlayerRecord
 		var date = new DateTimeOffset(songPlayRecord.LocalTime.ToUniversalTime()).ToUnixTimeMilliseconds();
 		var modifiedScore = songPlayRecord.ModifiedScore;
-		var record = _instance._recordManager.GetRecordMatching(beatmapKeyString, date, modifiedScore);
+		var record = _instance._recordManager.GetRecordMatching(beatmapKey, date, modifiedScore);
 		// for logging
-		var infoString = $"beatmapKey: {beatmapKeyString}, date: {date}, modifiedScore: {modifiedScore}";
+		var infoString = $"beatmapKey: {beatmapKey.ToBeatmapKeyString()}, date: {date}, modifiedScore: {modifiedScore}";
 
 		if (record?.PlayerName != null)
 		{
