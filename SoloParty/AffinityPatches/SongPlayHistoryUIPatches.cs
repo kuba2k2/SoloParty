@@ -142,7 +142,7 @@ internal sealed class SongPlayHistoryUIPatches(
 			return builder;
 
 		// format parameters as used by PlayerRecord
-		var date = new DateTimeOffset(songPlayRecord.LocalTime.ToUniversalTime()).ToUnixTimeMilliseconds();
+		var date = songPlayRecord.LocalTime.ToUnixTimeMilliseconds();
 		var modifiedScore = songPlayRecord.ModifiedScore;
 		var record = _instance._recordManager.GetRecordMatching(beatmapKey, date, modifiedScore);
 		// for logging
