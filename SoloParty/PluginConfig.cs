@@ -9,6 +9,8 @@ namespace SoloParty;
 
 internal class PluginConfig
 {
+	private bool _leaderboardSongPlayHistory = true;
+
 	public virtual bool ModEnabled { get; set; } = true;
 	public virtual bool SoloTrackingEnabled { get; set; } = true;
 	public virtual bool SoloChooserEnabled { get; set; } = true;
@@ -21,13 +23,13 @@ internal class PluginConfig
 
 	public virtual bool LeaderboardSongPlayHistory
 	{
-		get;
+		get => _leaderboardSongPlayHistory;
 		set
 		{
-			field = value;
+			_leaderboardSongPlayHistory = value;
 			LeaderboardSongPlayHistoryChanged?.Invoke();
 		}
-	} = true;
+	}
 
 	public event Action? LeaderboardSongPlayHistoryChanged;
 }
