@@ -18,7 +18,8 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("BadCutsCount")] public int BadCutsCount { get; internal set; } = -1;
 	[JsonProperty("MissedCount")] public int MissedCount { get; internal set; } = -1;
 	[JsonProperty("MaxCombo")] public int MaxCombo { get; internal set; } = -1;
-	[JsonProperty("NotesLeft")] public int NotesLeft { get; internal set; } = -1;
+	[JsonProperty("NotesPassed")] public int NotesPassed { get; internal set; } = -1;
+	[JsonProperty("NotesCount")] public int NotesCount { get; internal set; } = -1;
 	[JsonProperty("SoftFailed")] public bool SoftFailed { get; internal set; }
 	[JsonProperty("Modifiers")] public Modifier Modifiers { get; internal set; } = Modifier.None;
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
@@ -36,7 +37,8 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"BadCutsCount = {BadCutsCount}, " +
 		       $"MissedCount = {MissedCount}, " +
 		       $"MaxCombo = {MaxCombo}, " +
-		       $"NotesLeft = {NotesLeft}, " +
+		       $"NotesPassed = {NotesPassed}, " +
+		       $"NotesCount = {NotesCount}, " +
 		       $"SoftFailed = {SoftFailed}, " +
 		       $"Modifiers = {Modifiers.ToModifierString()}, " +
 		       $"PlayerName = {PlayerName} " +
@@ -75,8 +77,10 @@ public class SoloRecord : IComparable<SoloRecord>
 			MissedCount = other.MissedCount;
 		if (MaxCombo == -1 && other.MaxCombo != -1)
 			MaxCombo = other.MaxCombo;
-		if (NotesLeft == -1 && other.NotesLeft != -1)
-			NotesLeft = other.NotesLeft;
+		if (NotesPassed == -1 && other.NotesPassed != -1)
+			NotesPassed = other.NotesPassed;
+		if (NotesCount == -1 && other.NotesCount != -1)
+			NotesCount = other.NotesCount;
 		if (other.SoftFailed)
 			SoftFailed = other.SoftFailed;
 		if (Modifiers == Modifier.None && other.Modifiers != Modifier.None)

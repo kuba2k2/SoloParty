@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using HMUI;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
@@ -98,7 +98,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		// player name chooser disabled, save results and call the original method
 		if (!config.SoloChooserEnabled)
 		{
-			SaveResults(levelCompletionResults, beatmapKey, date, null);
+			SaveResults(beatmapKey, levelCompletionResults, transformedBeatmapData, date, null);
 			return true;
 		}
 
@@ -107,7 +107,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		enterNameViewController.Init((_, playerName) =>
 		{
 			log.Info($"Got player name '{playerName}'");
-			SaveResults(levelCompletionResults, beatmapKey, date, playerName);
+			SaveResults(beatmapKey, levelCompletionResults, transformedBeatmapData, date, playerName);
 
 			// redirect the PresentViewController() call to ReplaceTopViewController()
 			_replaceNextViewController = true;
@@ -128,8 +128,9 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 	}
 
 	private void SaveResults(
-		LevelCompletionResults levelCompletionResults,
 		BeatmapKey beatmapKey,
+		LevelCompletionResults levelCompletionResults,
+		IReadonlyBeatmapData beatmapData,
 		long date,
 		string? playerName
 	)
@@ -138,6 +139,8 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		var multipliedScore = levelCompletionResults.multipliedScore;
 		var maxModifiedScore = -1;
 		var maxMultipliedScore = -1;
+		var notesPassed = -1;
+		var notesCount = beatmapData.cuttableNotesCount;
 
 		log.Info(
 			$"Beatmap '{beatmapKey.ToBeatmapKeyString()}' finished at {date} " +
@@ -172,6 +175,18 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			         $"multiplied = {multipliedScore}/{RankModelPatches.MultipliedScore}");
 		}
 
+		// get notes passed (before soft-failing, optionally)
+		if (GameEnergyCounterPatches.GameStarted)
+		{
+			notesPassed = GameEnergyCounterPatches.NotesPassed;
+			GameEnergyCounterPatches.GameStarted = false;
+		}
+		else
+		{
+			log.Warn($"GameEnergyCounterPatches didn't save passed notes! " +
+			         $"notesPassed = {GameEnergyCounterPatches.NotesPassed}");
+		}
+
 		// save a new record
 		var record = new SoloRecord
 		{
@@ -185,7 +200,8 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			BadCutsCount = levelCompletionResults.badCutsCount,
 			MissedCount = levelCompletionResults.missedCount,
 			MaxCombo = levelCompletionResults.maxCombo,
-			NotesLeft = 0, // only saving cleared levels (for now)
+			NotesPassed = notesPassed,
+			NotesCount = notesCount,
 			SoftFailed =
 				levelCompletionResults.gameplayModifiers.noFailOn0Energy &&
 				levelCompletionResults.energy <= 9.999999747378752E-06, // don't ask, that's what the base game uses

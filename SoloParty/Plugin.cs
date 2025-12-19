@@ -28,9 +28,8 @@ internal class Plugin
 			pluginMetadata,
 			new Harmony(pluginMetadata.Id)
 		);
-		zenjector.Install<MenuInstaller>(
-			Location.Menu
-		);
+		zenjector.Install<MenuInstaller>(Location.Menu);
+		zenjector.Install<GameInstaller>(Location.StandardPlayer);
 	}
 
 	[OnStart]
