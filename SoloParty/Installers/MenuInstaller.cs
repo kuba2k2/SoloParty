@@ -2,6 +2,7 @@ using SiraUtil.Logging;
 using SoloParty.AffinityPatches;
 using SoloParty.Data.External;
 using SoloParty.Data.HighScore;
+using SoloParty.UI.Leaderboard;
 using SoloParty.UI.Settings;
 using Zenject;
 
@@ -19,6 +20,14 @@ internal class MenuInstaller(
 		Container.BindInterfacesTo<SoloFreePlayFlowCoordinatorPatches>().AsSingle();
 		Container.BindInterfacesTo<EnterPlayerGuestNameViewControllerPatches>().AsSingle();
 		Container.BindInterfacesTo<RankModelPatches>().AsSingle();
+
+		if (Plugin.LeaderboardCoreInstalled)
+		{
+			log.Info("LeaderboardCore found, creating solo leaderboard");
+			Container.BindInterfacesAndSelfTo<PanelView>().FromNewComponentAsViewController().AsSingle();
+			Container.BindInterfacesAndSelfTo<LeaderboardView>().FromNewComponentAsViewController().AsSingle();
+			Container.BindInterfacesTo<SoloLeaderboard>().AsSingle();
+		}
 
 		if (Plugin.SongPlayHistoryInstalled)
 		{

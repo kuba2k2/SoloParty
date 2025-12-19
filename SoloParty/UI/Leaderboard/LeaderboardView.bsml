@@ -1,0 +1,88 @@
+﻿<bg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd">
+
+	<horizontal
+		anchor-pos-x="1.25"
+		anchor-pos-y="4.5"
+		pref-width="95"
+		pref-height="60"
+		horizontal-fit="PreferredSize"
+		vertical-fit="PreferredSize"
+		spacing="2"
+		child-expand-width="false">
+
+		<vertical
+			vertical-fit="PreferredSize"
+			spacing="1"
+			child-expand-width="false">
+			<vertical
+				pref-width="10"
+				pad-left="3"
+				pad-right="3"
+				child-expand-width="false">
+				<page-button
+					id="pageUp"
+					on-click="OnPageUpClick"
+					icon="#ArrowIcon"
+					hover-hint="Page Up"
+					dir="Up"
+					pref-width="4"
+					pref-height="4"
+					show-underline="true"/>
+			</vertical>
+
+			<image
+				id="sortLastPlayedIcon"
+				src="#ClockIcon"
+				active="false"/>
+			<image
+				id="sortBestScoreIcon"
+				src="#DifficultyIcon"
+				active="false"/>
+			<image
+				id="sortGoodCutsIcon"
+				src="#GameNoteIcon"
+				active="false"/>
+
+			<vertical
+				pref-width="10"
+				pref-height="30"
+				child-expand-width="false"
+				child-expand-height="false">
+				<vertical-icon-segments
+					id="sortControl"
+					contents="sortIcons"
+					select-cell="OnSortClick"/>
+			</vertical>
+
+			<vertical
+				pref-width="10"
+				pad-left="3"
+				pad-right="3"
+				child-expand-width="false">
+				<page-button
+					id="pageDown"
+					on-click="OnPageDownClick"
+					icon="#ArrowIcon"
+					hover-hint="Page Down"
+					dir="Down"
+					pref-width="4"
+					pref-height="4"
+					show-underline="true"/>
+			</vertical>
+		</vertical>
+
+		<horizontal pref-width="40" ignore-layout="true" horizontal-fit="PreferredSize">
+			<text
+				id="noScores"
+				text="No scores on this level."
+				font-size="4"
+				align="Center"
+				italics="true"/>
+		</horizontal>
+
+		<vertical pref-width="78">
+			<leaderboard id="leaderboard" cell-size="5.9"/>
+		</vertical>
+	</horizontal>
+</bg>
