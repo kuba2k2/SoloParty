@@ -142,6 +142,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		var maxMultipliedScore = -1;
 		var notesPassed = -1;
 		var notesCount = beatmapData.cuttableNotesCount;
+		var endState = levelCompletionResults.fullCombo ? EndState.FullCombo : EndState.Cleared;
 
 		log.Info(
 			$"Beatmap '{beatmapKey.ToBeatmapKeyString()}' finished at {date} " +
@@ -180,6 +181,8 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		if (GameEnergyCounterPatches.GameStarted)
 		{
 			notesPassed = GameEnergyCounterPatches.NotesPassed;
+			if (levelCompletionResults.gameplayModifiers.noFailOn0Energy && GameEnergyCounterPatches.EnergyDidReach0)
+				endState = EndState.SoftFailed;
 			GameEnergyCounterPatches.GameStarted = false;
 		}
 		else
@@ -187,6 +190,12 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			log.Warn($"GameEnergyCounterPatches didn't save passed notes! " +
 			         $"notesPassed = {GameEnergyCounterPatches.NotesPassed}");
 		}
+
+		// check again if soft-failed
+		// (don't ask, that's how the base game does this)
+		if (levelCompletionResults.gameplayModifiers.noFailOn0Energy &&
+		    levelCompletionResults.energy <= 9.999999747378752E-06)
+			endState = EndState.SoftFailed;
 
 		// save a new record
 		var record = new SoloRecord
@@ -196,16 +205,13 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			MultipliedScore = multipliedScore,
 			MaxModifiedScore = maxModifiedScore,
 			MaxMultipliedScore = maxMultipliedScore,
-			FullCombo = levelCompletionResults.fullCombo,
 			GoodCutsCount = levelCompletionResults.goodCutsCount,
 			BadCutsCount = levelCompletionResults.badCutsCount,
 			MissedCount = levelCompletionResults.missedCount,
 			MaxCombo = levelCompletionResults.maxCombo,
 			NotesPassed = notesPassed,
 			NotesCount = notesCount,
-			SoftFailed =
-				levelCompletionResults.gameplayModifiers.noFailOn0Energy &&
-				levelCompletionResults.energy <= 9.999999747378752E-06, // don't ask, that's what the base game uses
+			EndState = endState,
 			Modifiers = levelCompletionResults.gameplayModifiers.ToSoloModifier(),
 			PlayerName = playerName
 		};

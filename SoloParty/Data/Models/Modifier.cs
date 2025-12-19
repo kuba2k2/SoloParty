@@ -1,5 +1,8 @@
-﻿namespace SoloParty.Data.Models;
+﻿using System;
 
+namespace SoloParty.Data.Models;
+
+[Flags]
 public enum Modifier
 {
 	// Game modifiers

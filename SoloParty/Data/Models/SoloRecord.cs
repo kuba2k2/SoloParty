@@ -13,14 +13,13 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("MultipliedScore")] public int MultipliedScore { get; internal set; } = -1;
 	[JsonProperty("MaxModifiedScore")] public int MaxModifiedScore { get; internal set; } = -1;
 	[JsonProperty("MaxMultipliedScore")] public int MaxMultipliedScore { get; internal set; } = -1;
-	[JsonProperty("FullCombo")] public bool FullCombo { get; internal set; }
 	[JsonProperty("GoodCutsCount")] public int GoodCutsCount { get; internal set; } = -1;
 	[JsonProperty("BadCutsCount")] public int BadCutsCount { get; internal set; } = -1;
 	[JsonProperty("MissedCount")] public int MissedCount { get; internal set; } = -1;
 	[JsonProperty("MaxCombo")] public int MaxCombo { get; internal set; } = -1;
 	[JsonProperty("NotesPassed")] public int NotesPassed { get; internal set; } = -1;
 	[JsonProperty("NotesCount")] public int NotesCount { get; internal set; } = -1;
-	[JsonProperty("SoftFailed")] public bool SoftFailed { get; internal set; }
+	[JsonProperty("EndState")] public EndState EndState { get; internal set; } = EndState.Unknown;
 	[JsonProperty("Modifiers")] public Modifier Modifiers { get; internal set; } = Modifier.None;
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
 
@@ -32,14 +31,13 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"MultipliedScore = {MultipliedScore}, " +
 		       $"MaxModifiedScore = {MaxModifiedScore}, " +
 		       $"MaxMultipliedScore = {MaxMultipliedScore}, " +
-		       $"FullCombo = {FullCombo}, " +
 		       $"GoodCutsCount = {GoodCutsCount}, " +
 		       $"BadCutsCount = {BadCutsCount}, " +
 		       $"MissedCount = {MissedCount}, " +
 		       $"MaxCombo = {MaxCombo}, " +
 		       $"NotesPassed = {NotesPassed}, " +
 		       $"NotesCount = {NotesCount}, " +
-		       $"SoftFailed = {SoftFailed}, " +
+		       $"EndState = {EndState}, " +
 		       $"Modifiers = {Modifiers.ToModifierString()}, " +
 		       $"PlayerName = {PlayerName} " +
 		       $"}}";
@@ -67,8 +65,6 @@ public class SoloRecord : IComparable<SoloRecord>
 			MaxModifiedScore = other.MaxModifiedScore;
 		if (MaxMultipliedScore == -1 && other.MaxMultipliedScore != -1)
 			MaxMultipliedScore = other.MaxMultipliedScore;
-		if (other.FullCombo)
-			FullCombo = other.FullCombo;
 		if (GoodCutsCount == -1 && other.GoodCutsCount != -1)
 			GoodCutsCount = other.GoodCutsCount;
 		if (BadCutsCount == -1 && other.BadCutsCount != -1)
@@ -81,8 +77,8 @@ public class SoloRecord : IComparable<SoloRecord>
 			NotesPassed = other.NotesPassed;
 		if (NotesCount == -1 && other.NotesCount != -1)
 			NotesCount = other.NotesCount;
-		if (other.SoftFailed)
-			SoftFailed = other.SoftFailed;
+		if (EndState == EndState.Unknown && other.EndState != EndState.Unknown)
+			EndState = other.EndState;
 		if (Modifiers == Modifier.None && other.Modifiers != Modifier.None)
 			Modifiers = other.Modifiers;
 		if (PlayerName == null && other.PlayerName != null)
