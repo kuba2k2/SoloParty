@@ -1,4 +1,4 @@
-﻿namespace SoloParty.Data;
+﻿namespace SoloParty.Data.Models;
 
 public enum Modifier
 {

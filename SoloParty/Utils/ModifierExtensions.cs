@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SoloParty.Data;
+using SoloParty.Data.Models;
 
 namespace SoloParty.Utils;
 

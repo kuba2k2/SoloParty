@@ -6,6 +6,7 @@ using System.Linq;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SiraUtil.Logging;
+using SoloParty.Data.Models;
 using SoloParty.Utils;
 using Zenject;
 

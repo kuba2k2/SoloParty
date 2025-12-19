@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using SoloParty.Utils;
 
-namespace SoloParty.Data;
+namespace SoloParty.Data.Models;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class SoloRecord : IComparable<SoloRecord>

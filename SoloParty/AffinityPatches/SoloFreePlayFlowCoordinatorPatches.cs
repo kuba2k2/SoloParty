@@ -5,6 +5,7 @@ using SiraUtil.Logging;
 using SoloParty.Data;
 using SoloParty.Data.HighScore;
 using SoloParty.Data.Manager;
+using SoloParty.Data.Models;
 using SoloParty.Utils;
 
 namespace SoloParty.AffinityPatches;

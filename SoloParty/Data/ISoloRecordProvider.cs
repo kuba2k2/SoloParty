@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SoloParty.Data.Models;
 
 namespace SoloParty.Data;
 
