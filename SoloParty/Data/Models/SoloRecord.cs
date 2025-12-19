@@ -23,6 +23,8 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("Modifiers")] public Modifier Modifiers { get; internal set; } = Modifier.None;
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
 
+	public bool IsExternal;
+
 	public override string ToString()
 	{
 		return $"PlayerRecord {{ " +
@@ -39,7 +41,8 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"NotesCount = {NotesCount}, " +
 		       $"EndState = {EndState}, " +
 		       $"Modifiers = {Modifiers.ToModifierString()}, " +
-		       $"PlayerName = {PlayerName} " +
+		       $"PlayerName = {PlayerName}, " +
+		       $"IsExternal = {IsExternal} " +
 		       $"}}";
 	}
 
@@ -50,7 +53,13 @@ public class SoloRecord : IComparable<SoloRecord>
 
 	public bool Matches(SoloRecord other)
 	{
-		return Math.Abs(Date - other.Date) < 10000 && ModifiedScore == other.ModifiedScore;
+		if (Math.Abs(Date - other.Date) >= 10000)
+			return false;
+		if (ModifiedScore == -1)
+			return true;
+		if (other.ModifiedScore == -1)
+			return true;
+		return ModifiedScore == other.ModifiedScore;
 	}
 
 	public void MergeFrom(SoloRecord other)
@@ -83,6 +92,8 @@ public class SoloRecord : IComparable<SoloRecord>
 			Modifiers = other.Modifiers;
 		if (PlayerName == null && other.PlayerName != null)
 			PlayerName = other.PlayerName;
+		if (!other.IsExternal)
+			IsExternal = false;
 	}
 
 	public static SoloRecord MergeAll(List<SoloRecord> records)
@@ -108,7 +119,9 @@ public class SoloRecord : IComparable<SoloRecord>
 
 		public int GetHashCode(SoloRecord obj)
 		{
-			return HashCode.Combine(obj.Date / 10000, obj.ModifiedScore);
+			// in GroupBy() *both* Equals() and HashCode() have to match
+			// since only the absolute difference of two Date fields counts, HashCode can't be used :(
+			return 0;
 		}
 	}
 }

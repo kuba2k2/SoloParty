@@ -116,7 +116,7 @@ public class SoloRecordManager(
 		SaveRecords(_dataFilePath);
 	}
 
-	public IList<SoloRecord> GetRecords(BeatmapKey beatmapKey)
+	public List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
 		return _records.TryGetValue(beatmapKey.ToBeatmapKeyString(), out var records)
 			? records.ToList()
@@ -125,16 +125,10 @@ public class SoloRecordManager(
 
 	public SoloRecord? GetRecordPlayerBest(BeatmapKey beatmapKey, string playerName)
 	{
-		SoloRecord? best = null;
-		foreach (var record in GetRecords(beatmapKey))
-		{
-			if (record.PlayerName != playerName)
-				continue;
-			if (best == null || record.ModifiedScore > best.ModifiedScore)
-				best = record;
-		}
-
-		return best;
+		return GetRecords(beatmapKey)
+			.Where(record => record.PlayerName == playerName)
+			.OrderByDescending(record => record.ModifiedScore)
+			.FirstOrDefault();
 	}
 
 	public SoloRecord? GetRecordMatching(BeatmapKey beatmapKey, long date, int modifiedScore)

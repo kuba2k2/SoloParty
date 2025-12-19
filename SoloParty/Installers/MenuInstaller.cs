@@ -1,5 +1,6 @@
 using SiraUtil.Logging;
 using SoloParty.AffinityPatches;
+using SoloParty.Data.External;
 using SoloParty.Data.HighScore;
 using SoloParty.UI.Settings;
 using Zenject;
@@ -23,6 +24,7 @@ internal class MenuInstaller(
 		{
 			log.Info("SongPlayHistory found, enabling high score setter and UI patches");
 			Container.BindInterfacesTo<SongPlayHistoryHighScoreSetter>().AsSingle();
+			Container.BindInterfacesTo<SongPlayHistoryRecordProvider>().AsSingle();
 			Container.BindInterfacesAndSelfTo<SongPlayHistoryUIPatches>().AsSingle();
 		}
 		else

@@ -2,7 +2,6 @@ using System;
 using HMUI;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
-using SoloParty.Data;
 using SoloParty.Data.HighScore;
 using SoloParty.Data.Manager;
 using SoloParty.Data.Models;
