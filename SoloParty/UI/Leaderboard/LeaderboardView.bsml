@@ -132,6 +132,7 @@
 							<text
 								id="modifiers"
 								text="GN,SFS,NF"
+								hover-hint="Ghost Notes, Super Fast Song, No Fail"
 								italics="true"
 								rich-text="true"
 								font-align="CaplineRight"
@@ -142,6 +143,7 @@
 							<text
 								id="accuracy"
 								text="96,41%"
+								hover-hint="Rank -  SS"
 								italics="true"
 								rich-text="true"
 								font-align="Capline"
@@ -152,6 +154,7 @@
 							<text
 								id="score"
 								text="1 234 567"
+								hover-hint="Max Combo -  123"
 								italics="true"
 								rich-text="true"
 								font-align="Capline"
@@ -162,6 +165,7 @@
 							<text
 								id="date"
 								text="13 days ago"
+								hover-hint="1/2/2020, 4:50 PM"
 								italics="true"
 								rich-text="true"
 								font-align="Capline"
@@ -172,6 +176,7 @@
 							<text
 								id="mistakes"
 								text="FC"
+								hover-hint="Full Combo"
 								italics="true"
 								rich-text="true"
 								font-align="Capline"

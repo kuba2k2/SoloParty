@@ -72,11 +72,14 @@ internal class LeaderboardViewRow
 		if (record.Modifiers == Modifier.None)
 		{
 			_modifiers.text = "";
+			_modifiers.SetHint("");
 			return;
 		}
 
 		var modifiers = record.Modifiers.ToModifierString();
+		var hint = record.Modifiers.ToModifierDescription();
 		_modifiers.text = $"<color={DimColor}>{modifiers}</color>";
+		_modifiers.SetHint(hint);
 	}
 
 	private void ShowAccuracy(SoloRecord record)
@@ -84,12 +87,16 @@ internal class LeaderboardViewRow
 		if (record.MaxModifiedScore <= 0 || record.MaxMultipliedScore < 0)
 		{
 			_accuracy.text = "";
+			_accuracy.SetHint("");
 			return;
 		}
 
 		var accuracy = record.Accuracy.ToString("P2", _numberFormat);
-		var color = _rankColorMap.GetValueOrDefault(record.Rank);
+		var rank = record.Rank;
+		var color = _rankColorMap.GetValueOrDefault(rank);
+		var hint = $"Rank -  {RankModel.GetRankName(rank)}";
 		_accuracy.text = $"<color={color}>{accuracy}<size=70%>%</size></color>";
+		_accuracy.SetHint(hint);
 	}
 
 	private void ShowScore(SoloRecord record)
@@ -97,16 +104,20 @@ internal class LeaderboardViewRow
 		if (record.ModifiedScore == -1)
 		{
 			_score.text = "";
+			_score.SetHint("");
 			return;
 		}
 
 		var score = record.ModifiedScore.ToString("N0", _numberFormat);
+		var hint = record.MaxCombo == -1 ? "" : $"Max Combo -  {record.MaxCombo}";
 		_score.text = $"{score}";
+		_score.SetHint(hint);
 	}
 
 	private void ShowDate(SoloRecord record)
 	{
-		var timeSpan = DateTime.Now - record.Date.ToLocalDateTime();
+		var localDate = record.Date.ToLocalDateTime();
+		var timeSpan = DateTime.Now - localDate;
 
 		const long ageMaxDays = 12 * 30;
 		const long ageMaxMillis = ageMaxDays * 86400000;
@@ -115,17 +126,21 @@ internal class LeaderboardViewRow
 		var color = Color.Lerp(_dateOldColor, _dateFreshColor, Mathf.Pow(1 - age, 2f));
 
 		var date = timeSpan.FormatTimeAgo();
+		var hint = localDate.ToShortDateString() + ", " + localDate.ToShortTimeString();
 		_date.text = $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{date}</color>";
+		_date.SetHint(hint);
 	}
 
 	private void ShowMistakes(SoloRecord record)
 	{
 		string mistakes;
+		string hint;
 		string color;
 		switch (record.EndState)
 		{
 			case EndState.FullCombo:
 				mistakes = "FC";
+				hint = "Full Combo";
 				color = FullComboColor;
 				break;
 
@@ -133,7 +148,9 @@ internal class LeaderboardViewRow
 				if (record.BadCutsCount == -1 || record.MissedCount == -1)
 					goto unknown;
 				var mistakesCount = record.BadCutsCount + record.MissedCount;
+				var totalCount = record.GoodCutsCount + mistakesCount;
 				mistakes = $"{mistakesCount}x";
+				hint = $"Good Cuts -  {record.GoodCutsCount}/{totalCount}";
 				color = mistakesCount == 0 ? NoMistakesColor : MistakesColor;
 				break;
 
@@ -145,6 +162,7 @@ internal class LeaderboardViewRow
 				mistakes = notesLeft >= 100
 					? $"<size=70%>+{notesLeft}</size>"
 					: $"+{notesLeft}";
+				hint = $"Failed after {record.NotesPassed}/{record.NotesCount} notes";
 				color = FailedColor;
 				break;
 
@@ -152,9 +170,11 @@ internal class LeaderboardViewRow
 			default:
 				unknown:
 				_mistakes.text = "";
+				_mistakes.SetHint("");
 				return;
 		}
 
 		_mistakes.text = $"<color={color}>{mistakes}</color>";
+		_mistakes.SetHint(hint);
 	}
 }

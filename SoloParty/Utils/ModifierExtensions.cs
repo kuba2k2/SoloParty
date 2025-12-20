@@ -8,25 +8,25 @@ namespace SoloParty.Utils;
 
 public static class ModifierExtensions
 {
-	private static readonly List<Tuple<Modifier, string>> Modifiers =
+	private static readonly List<Tuple<Modifier, string, string>> Modifiers =
 	[
-		new(Modifier.Multiplayer, "MULTI"),
-		new(Modifier.ZenMode, "ZEN"),
-		new(Modifier.BatteryEnergy, "BE"),
-		new(Modifier.NoFail, "NF"),
-		new(Modifier.InstaFail, "IF"),
-		new(Modifier.NoObstacles, "NO"),
-		new(Modifier.NoBombs, "NB"),
-		new(Modifier.FastNotes, "FN"),
-		new(Modifier.StrictAngles, "SA"),
-		new(Modifier.DisappearingArrows, "DA"),
-		new(Modifier.SuperFastSong, "SFS"),
-		new(Modifier.FasterSong, "FS"),
-		new(Modifier.SlowerSong, "SS"),
-		new(Modifier.NoArrows, "NA"),
-		new(Modifier.GhostNotes, "GN"),
-		new(Modifier.SmallCubes, "SN"),
-		new(Modifier.ProMode, "PRO")
+		new(Modifier.Multiplayer, "MULTI", "Multiplayer"),
+		new(Modifier.ZenMode, "ZEN", "Zen Mode"),
+		new(Modifier.BatteryEnergy, "BE", "4 Lives"),
+		new(Modifier.NoFail, "NF", "No Fail"),
+		new(Modifier.InstaFail, "IF", "1 Life"),
+		new(Modifier.NoObstacles, "NO", "No Walls"),
+		new(Modifier.NoBombs, "NB", "No Bombs"),
+		new(Modifier.FastNotes, "FN", "Fast Notes"),
+		new(Modifier.StrictAngles, "SA", "Strict Angles"),
+		new(Modifier.DisappearingArrows, "DA", "Disappearing Arrows"),
+		new(Modifier.SuperFastSong, "SFS", "Super Fast Song"),
+		new(Modifier.FasterSong, "FS", "Faster Song"),
+		new(Modifier.SlowerSong, "SS", "Slower Song"),
+		new(Modifier.NoArrows, "NA", "No Arrows"),
+		new(Modifier.GhostNotes, "GN", "Ghost Notes"),
+		new(Modifier.SmallCubes, "SN", "Small Notes"),
+		new(Modifier.ProMode, "PRO", "Pro Mode")
 	];
 
 	public static Modifier ToSoloModifier(this GameplayModifiers modifiers)
@@ -56,18 +56,33 @@ public static class ModifierExtensions
 		return modifier;
 	}
 
-	public static string ToModifierString(this Modifier modifier)
+	extension(Modifier modifier)
 	{
-		if (modifier == Modifier.None)
-			return "";
+		public string ToModifierString()
+		{
+			if (modifier == Modifier.None)
+				return "";
 
-		var modifiers = Modifiers
-			.Where(tuple => modifier.HasFlag(tuple.Item1))
-			.Select(tuple => tuple.Item2)
-			.ToList();
+			var modifiers = Modifiers
+				.Where(tuple => modifier.HasFlag(tuple.Item1))
+				.Select(tuple => tuple.Item2)
+				.ToList();
 
-		if (modifiers.Count > 4)
-			return string.Join(",", modifiers.Take(3)) + "...";
-		return string.Join(",", modifiers);
+			if (modifiers.Count > 4)
+				return string.Join(",", modifiers.Take(3)) + "...";
+			return string.Join(",", modifiers);
+		}
+
+		public string ToModifierDescription()
+		{
+			if (modifier == Modifier.None)
+				return "No Modifiers";
+
+			var modifiers = Modifiers
+				.Where(tuple => modifier.HasFlag(tuple.Item1))
+				.Select(tuple => tuple.Item3)
+				.ToList();
+			return string.Join(", ", modifiers);
+		}
 	}
 }
