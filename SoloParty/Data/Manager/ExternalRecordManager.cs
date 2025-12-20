@@ -33,11 +33,21 @@ public class ExternalRecordManager(
 
 	public List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
-		var allRecords = recordManager.GetRecords(beatmapKey);
+		var soloRecords = recordManager.GetRecords(beatmapKey);
+		var allRecords = soloRecords.ToList();
 		foreach (var provider in _providers)
 		{
 			allRecords.AddRange(provider.GetRecords(beatmapKey));
 		}
+
+		// find records with MaxMultipliedScore and NotesCount populated, fill other records based on that
+		// (fill allRecords, before grouping, to ensure that all instances of SoloRecord get the values)
+		var scoredRecord = allRecords.FirstOrDefault(record => record.MaxMultipliedScore != -1);
+		if (scoredRecord != null)
+			allRecords.ForEach(record => record.FillMaxScore(scoredRecord.MaxMultipliedScore));
+		var countedRecord = allRecords.FirstOrDefault(record => record.NotesCount != -1);
+		if (countedRecord != null)
+			allRecords.ForEach(record => record.FillNotesCount(countedRecord.NotesCount));
 
 		return allRecords
 			.GroupBy(

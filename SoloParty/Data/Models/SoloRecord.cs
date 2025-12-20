@@ -63,6 +63,39 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"}}";
 	}
 
+	public void FillMaxScore(int maxMultipliedScore)
+	{
+		if (MaxMultipliedScore != -1 && MaxModifiedScore != -1)
+			return;
+		var totalMultiplier = Modifiers.GetTotalMultiplier(softFailed: EndState == EndState.SoftFailed);
+		MaxMultipliedScore = maxMultipliedScore;
+		MaxModifiedScore = Mathf.FloorToInt(maxMultipliedScore * totalMultiplier);
+	}
+
+	public void FillNotesCount(int notesCount)
+	{
+		if (NotesCount != -1)
+			return;
+		NotesCount = notesCount;
+		switch (EndState)
+		{
+			case EndState.FullCombo:
+				NotesPassed = NotesCount;
+				GoodCutsCount = NotesCount;
+				BadCutsCount = 0;
+				MissedCount = 0;
+				break;
+			case EndState.Cleared:
+				NotesPassed = NotesCount;
+				break;
+			case EndState.Unknown:
+			case EndState.SoftFailed:
+			case EndState.Failed:
+			default:
+				break;
+		}
+	}
+
 	public int CompareTo(SoloRecord other)
 	{
 		return ModifiedScore.CompareTo(other.ModifiedScore);
