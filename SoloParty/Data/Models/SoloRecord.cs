@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using SoloParty.Utils;
+using UnityEngine;
 
 namespace SoloParty.Data.Models;
 
@@ -24,6 +25,21 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
 
 	public bool IsExternal;
+
+	public float Accuracy
+	{
+		get
+		{
+			if (MaxModifiedScore <= 0)
+				return 0f;
+			if (MaxMultipliedScore == 0)
+				return 1f;
+			return ModifiedScore / (float)Mathf.Max(MaxMultipliedScore, MaxModifiedScore);
+		}
+	}
+
+	public RankModel.Rank Rank =>
+		RankModel.GetRankForScore(MultipliedScore, ModifiedScore, MaxMultipliedScore, MaxModifiedScore);
 
 	public override string ToString()
 	{

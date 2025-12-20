@@ -10,7 +10,6 @@ using SoloParty.Data.Manager;
 using SoloParty.Data.Models;
 using SoloParty.Utils;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -31,8 +30,6 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 	[UIComponent("sortGoodCutsIcon")] private readonly Image _sortGoodCutsIcon = null!;
 	[UIComponent("sortControl")] private readonly SegmentedControl _sortControl = null!;
 	[UIComponent("noScores")] private readonly TextMeshProUGUI _noScores = null!;
-	[UIComponent("leaderboard")] private readonly LeaderboardTableView _leaderboardTable = null!;
-	[UIComponent("leaderboard")] private readonly Transform _leaderboardTransform = null!;
 
 	[UIValue("sortIcons")]
 	private List<IconSegmentedControl.DataItem> sortIcons =>
@@ -42,6 +39,9 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 		new(_sortGoodCutsIcon.sprite, "Good Cuts"),
 	];
 
+	[UIValue("leaderboardRows")] private readonly List<LeaderboardViewRow> _leaderboardViewRows =
+		Enumerable.Range(0, 10).Select(_ => new LeaderboardViewRow()).ToList();
+
 	private BeatmapKey _beatmapKey;
 	private List<SoloRecord> _allRecords = [];
 	private int _offset;
@@ -49,12 +49,6 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 	[UIAction("#post-parse")]
 	private void PostParse()
 	{
-		var loadingControl = _leaderboardTransform.Find("LoadingControl").gameObject;
-		var loadingContainer = loadingControl.transform.Find("LoadingContainer");
-		loadingContainer.gameObject.SetActive(false);
-		Destroy(loadingContainer.Find("Text").gameObject);
-		Destroy(loadingControl.transform.Find("RefreshContainer").gameObject);
-		Destroy(loadingControl.transform.Find("DownloadingContainer").gameObject);
 		OnLeaderboardSet(_beatmapKey);
 	}
 
@@ -101,12 +95,6 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 		_sortControl.SelectCellWithNumber((int)_config.LeaderboardSortType);
 
 		_noScores.gameObject.SetActive(_allRecords.Count == 0);
-		if (_allRecords.Count == 0)
-		{
-			_leaderboardTable.SetScores([], -1);
-			return;
-		}
-
 		var records = _allRecords
 			.OrderByDescending(record =>
 				_config.LeaderboardSortType switch
@@ -121,15 +109,16 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 			.Take(10)
 			.ToList();
 
-		var scores = records
-			.Select((record, index) => new LeaderboardTableView.ScoreData(
-				score: record.ModifiedScore,
-				playerName: record.PlayerName,
-				rank: _offset + index + 1,
-				fullCombo: record.EndState == EndState.FullCombo
-			))
-			.ToList();
-
-		_leaderboardTable.SetScores(scores, -1);
+		foreach (var (row, index) in _leaderboardViewRows.Select((row, index) => (row, index)))
+		{
+			try
+			{
+				row.SetRecord(_offset, index, record: records[index], isLast: index >= records.Count - 1);
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+				row.SetRecord(_offset, index, record: null);
+			}
+		}
 	}
 }
