@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using SoloParty.Data.Models;
 using SoloParty.Utils;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace SoloParty.UI.Leaderboard;
@@ -47,6 +48,8 @@ internal class LeaderboardViewRow
 	private const string NoMistakesColor = "#FFFFFF";
 	private const string MistakesColor = "#FF8888";
 	private const string FailedColor = "#FF3D00";
+	private readonly Color _dateFreshColor = new(0.76f, 0.31f, 0.0f);
+	private readonly Color _dateOldColor = new(0.5f, 0.5f, 0.5f);
 
 	public void SetRecord(int offset, int index, SoloRecord? record, bool isLast = false)
 	{
@@ -105,8 +108,14 @@ internal class LeaderboardViewRow
 	{
 		var timeSpan = DateTime.Now - record.Date.ToLocalDateTime();
 
+		const long ageMaxDays = 12 * 30;
+		const long ageMaxMillis = ageMaxDays * 86400000;
+		var age = (float)timeSpan.TotalMilliseconds / ageMaxMillis;
+		age = Mathf.Clamp(age, 0f, 1f);
+		var color = Color.Lerp(_dateOldColor, _dateFreshColor, Mathf.Pow(1 - age, 2f));
+
 		var date = timeSpan.FormatTimeAgo();
-		_date.text = $"{date}";
+		_date.text = $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{date}</color>";
 	}
 
 	private void ShowMistakes(SoloRecord record)
