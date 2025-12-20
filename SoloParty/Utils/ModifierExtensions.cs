@@ -8,25 +8,25 @@ namespace SoloParty.Utils;
 
 public static class ModifierExtensions
 {
-	private static readonly List<Tuple<Modifier, string, string>> Modifiers =
+	private static readonly List<Tuple<Modifier, string, string, float>> Modifiers =
 	[
-		new(Modifier.Multiplayer, "MULTI", "Multiplayer"),
-		new(Modifier.ZenMode, "ZEN", "Zen Mode"),
-		new(Modifier.BatteryEnergy, "BE", "4 Lives"),
-		new(Modifier.NoFail, "NF", "No Fail"),
-		new(Modifier.InstaFail, "IF", "1 Life"),
-		new(Modifier.NoObstacles, "NO", "No Walls"),
-		new(Modifier.NoBombs, "NB", "No Bombs"),
-		new(Modifier.FastNotes, "FN", "Fast Notes"),
-		new(Modifier.StrictAngles, "SA", "Strict Angles"),
-		new(Modifier.DisappearingArrows, "DA", "Disappearing Arrows"),
-		new(Modifier.SuperFastSong, "SFS", "Super Fast Song"),
-		new(Modifier.FasterSong, "FS", "Faster Song"),
-		new(Modifier.SlowerSong, "SS", "Slower Song"),
-		new(Modifier.NoArrows, "NA", "No Arrows"),
-		new(Modifier.GhostNotes, "GN", "Ghost Notes"),
-		new(Modifier.SmallCubes, "SN", "Small Notes"),
-		new(Modifier.ProMode, "PRO", "Pro Mode")
+		new(Modifier.Multiplayer, "MULTI", "Multiplayer", 0),
+		new(Modifier.ZenMode, "ZEN", "Zen Mode", -1.00f),
+		new(Modifier.BatteryEnergy, "BE", "4 Lives", 0),
+		new(Modifier.NoFail, "NF", "No Fail", -0.50f),
+		new(Modifier.InstaFail, "IF", "1 Life", 0),
+		new(Modifier.NoObstacles, "NO", "No Walls", -0.05f),
+		new(Modifier.NoBombs, "NB", "No Bombs", -0.10f),
+		new(Modifier.FastNotes, "FN", "Fast Notes", 0),
+		new(Modifier.StrictAngles, "SA", "Strict Angles", 0),
+		new(Modifier.DisappearingArrows, "DA", "Disappearing Arrows", 0.07f),
+		new(Modifier.SuperFastSong, "SFS", "Super Fast Song", 0.10f),
+		new(Modifier.FasterSong, "FS", "Faster Song", 0.08f),
+		new(Modifier.SlowerSong, "SS", "Slower Song", -0.30f),
+		new(Modifier.NoArrows, "NA", "No Arrows", -0.30f),
+		new(Modifier.GhostNotes, "GN", "Ghost Notes", 0.11f),
+		new(Modifier.SmallCubes, "SN", "Small Notes", 0),
+		new(Modifier.ProMode, "PRO", "Pro Mode", 0)
 	];
 
 	public static Modifier ToSoloModifier(this GameplayModifiers modifiers)
@@ -83,6 +83,17 @@ public static class ModifierExtensions
 				.Select(tuple => tuple.Item3)
 				.ToList();
 			return string.Join(", ", modifiers);
+		}
+
+		public float GetTotalMultiplier(bool softFailed)
+		{
+			if (modifier == Modifier.None)
+				return 1.0f;
+
+			return 1.0f + Modifiers
+				.Where(tuple => modifier.HasFlag(tuple.Item1))
+				.Where(tuple => tuple.Item1 != Modifier.NoFail || softFailed)
+				.Sum(tuple => tuple.Item4);
 		}
 	}
 }
