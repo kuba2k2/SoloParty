@@ -25,6 +25,7 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
 
 	public bool IsExternal;
+	public bool IsLatest;
 
 	public float Accuracy
 	{

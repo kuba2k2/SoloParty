@@ -111,7 +111,14 @@ public class SoloRecordManager(
 
 	public void AddRecord(BeatmapKey beatmapKey, SoloRecord record)
 	{
-		_records.GetOrAdd(beatmapKey.ToBeatmapKeyString(), new List<SoloRecord>()).Add(record);
+		var records = _records.GetOrAdd(beatmapKey.ToBeatmapKeyString(), new List<SoloRecord>());
+		// clear IsLatest flag of all previous records
+		foreach (var r in records)
+		{
+			r.IsLatest = false;
+		}
+		// add the new record
+		records.Add(record);
 		_recordsModified = true;
 		SaveRecords(_dataFilePath);
 	}

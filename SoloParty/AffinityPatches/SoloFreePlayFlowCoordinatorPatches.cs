@@ -212,7 +212,8 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			NotesCount = notesCount,
 			EndState = endState,
 			Modifiers = levelCompletionResults.gameplayModifiers.ToSoloModifier(),
-			PlayerName = playerName
+			PlayerName = playerName,
+			IsLatest = true
 		};
 		log.Info($"Saving record: {record}");
 		recordManager.AddRecord(beatmapKey, record);

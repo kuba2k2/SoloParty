@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
@@ -12,6 +12,7 @@ namespace SoloParty.UI.Leaderboard;
 internal class LeaderboardViewRow
 {
 	[UIComponent("row")] private readonly LayoutGroup _row = null!;
+	[UIComponent("background")] private readonly LayoutGroup _background = null!;
 	[UIComponent("rank")] private readonly TextMeshProUGUI _rank = null!;
 	[UIComponent("playerName")] private readonly TextMeshProUGUI _playerName = null!;
 	[UIComponent("modifiers")] private readonly TextMeshProUGUI _modifiers = null!;
@@ -52,6 +53,7 @@ internal class LeaderboardViewRow
 		_row.gameObject.SetActive(record != null);
 		if (record == null)
 			return;
+		_background.gameObject.SetActive(record.IsLatest);
 		_rank.text = (offset + index + 1).ToString();
 		_playerName.text = record.PlayerName ?? $"<color={DimColor}>No Name</color>";
 		ShowModifiers(record);

@@ -98,9 +98,15 @@
 					bg-color="white"
 					bg-alpha="0">
 
-					<horizontal ignore-layout="true">
-						<image id="Background" pref-width="78"/>
-					</horizontal>
+					<horizontal
+						id="background"
+						ignore-layout="true"
+						pref-width="81"
+						pref-height="4.9"
+						anchor-pos-x="-0.5"
+						horizontal-fit="PreferredSize"
+						bg="panel-top-gradient"
+						bg-alpha="0.5"/>
 
 					<horizontal
 						ignore-layout="true"
@@ -181,6 +187,18 @@
 						bg="panel-top"
 						bg-color="white"
 						bg-alpha="0.2"/>
+
+					<horizontal
+						active="false"
+						id="foreground"
+						ignore-layout="true"
+						pref-width="81"
+						pref-height="5.3"
+						anchor-pos-x="-0.5"
+						horizontal-fit="PreferredSize"
+						bg="panel-top"
+						bg-color="#FFFFFF"
+						bg-alpha="0.15"/>
 				</horizontal>
 			</macro.for-each>
 		</vertical>
