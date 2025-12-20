@@ -49,18 +49,26 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 	[UIAction("#post-parse")]
 	private void PostParse()
 	{
-		OnLeaderboardSet(_beatmapKey);
+		ShowLeaderboard();
+	}
+
+	protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+	{
+		base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+		if (isActiveAndEnabled && firstActivation)
+			ShowLeaderboard();
 	}
 
 	public void OnLeaderboardSet(BeatmapKey beatmapKey)
 	{
-		if (!isActivated || !beatmapKey.IsValid())
+		if (!beatmapKey.IsValid())
 			return;
 		_log.Info($"Leaderboard set: {beatmapKey.ToBeatmapKeyString()}");
 		_beatmapKey = beatmapKey;
 		_allRecords = _recordManager.GetRecords(beatmapKey);
 		_offset = 0;
-		ShowLeaderboard();
+		if (isActivated)
+			ShowLeaderboard();
 	}
 
 	public void OnPageUpClick()
