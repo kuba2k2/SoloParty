@@ -9,7 +9,8 @@ namespace SoloParty.UI.Leaderboard;
 internal class SoloLeaderboard(
 	CustomLeaderboardManager manager,
 	PanelView panelView,
-	LeaderboardView leaderboardView
+	LeaderboardView leaderboardView,
+	PluginConfig config
 ) : CustomLeaderboard, IInitializable, IDisposable
 {
 	protected override ViewController panelViewController => panelView;
@@ -28,6 +29,6 @@ internal class SoloLeaderboard(
 
 	public override bool ShowForLevel(BeatmapKey? beatmapKey)
 	{
-		return true;
+		return config.ModEnabled;
 	}
 }
