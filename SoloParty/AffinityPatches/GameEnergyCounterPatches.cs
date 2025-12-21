@@ -7,6 +7,7 @@ internal class GameEnergyCounterPatches : IAffinity
 	public static bool GameStarted;
 	public static bool EnergyDidReach0;
 	public static int NotesPassed;
+	public static int NotesCount;
 
 	[AffinityPostfix]
 	[AffinityPatch(
@@ -20,6 +21,7 @@ internal class GameEnergyCounterPatches : IAffinity
 		GameStarted = true;
 		EnergyDidReach0 = false;
 		NotesPassed = 0;
+		NotesCount = 0;
 	}
 
 	[AffinityPostfix]
@@ -29,9 +31,11 @@ internal class GameEnergyCounterPatches : IAffinity
 	)]
 	private void HandleNoteWasCutPatch(NoteController noteController)
 	{
-		if (EnergyDidReach0 || noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
+		if (noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
 			return;
-		NotesPassed++;
+		NotesCount++;
+		if (!EnergyDidReach0)
+			NotesPassed++;
 	}
 
 	[AffinityPostfix]
@@ -41,9 +45,11 @@ internal class GameEnergyCounterPatches : IAffinity
 	)]
 	private void HandleNoteWasMissedPatch(NoteController noteController)
 	{
-		if (EnergyDidReach0 || noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
+		if (noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
 			return;
-		NotesPassed++;
+		NotesCount++;
+		if (!EnergyDidReach0)
+			NotesPassed++;
 	}
 
 	private static void OnEnergyDidReach0()

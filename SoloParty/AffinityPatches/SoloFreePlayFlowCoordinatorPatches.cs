@@ -180,6 +180,8 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		if (GameEnergyCounterPatches.GameStarted)
 		{
 			notesPassed = GameEnergyCounterPatches.NotesPassed;
+			// cuttableNotesCount doesn't include burst slider elements, so take total count from GameEnergyCounter
+			notesCount = Math.Max(notesCount, GameEnergyCounterPatches.NotesCount);
 			if (levelCompletionResults.gameplayModifiers.noFailOn0Energy && GameEnergyCounterPatches.EnergyDidReach0)
 				endState = EndState.SoftFailed;
 			GameEnergyCounterPatches.GameStarted = false;
