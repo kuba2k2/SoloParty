@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SoloParty.Data.Models;
+using Zenject;
 
 namespace SoloParty.Data.Manager;
 
@@ -11,6 +12,8 @@ public class ExternalRecordManager(
 	public string ProviderName => "External";
 
 	private readonly IList<ISoloRecordProvider> _providers = [];
+
+	[Inject] private readonly PluginConfig _config = null!;
 
 	public void Register(ISoloRecordProvider provider)
 	{
@@ -37,7 +40,15 @@ public class ExternalRecordManager(
 		var allRecords = soloRecords.ToList();
 		foreach (var provider in _providers)
 		{
-			allRecords.AddRange(provider.GetRecords(beatmapKey));
+			switch (provider.ProviderName)
+			{
+				case "PartyLeaderboard" when !_config.LeaderboardPartyModeRecords:
+				case "SongPlayHistory" when !_config.LeaderboardSongPlayHistoryRecords:
+					continue;
+				default:
+					allRecords.AddRange(provider.GetRecords(beatmapKey));
+					break;
+			}
 		}
 
 		// find records with MaxMultipliedScore and NotesCount populated, fill other records based on that

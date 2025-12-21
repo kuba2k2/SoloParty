@@ -25,16 +25,22 @@ internal class SettingsMenu(
 		set => config.SoloChooserEnabled = value;
 	}
 
-	public bool PlayerNameAutoAccept
+	public bool LeaderboardPartyModeRecords
 	{
-		get => config.PlayerNameAutoAccept;
-		set => config.PlayerNameAutoAccept = value;
+		get => config.LeaderboardPartyModeRecords;
+		set => config.LeaderboardPartyModeRecords = value;
 	}
 
-	public int PlayerNameMaxCount
+	public bool LeaderboardSongPlayHistoryRecords
 	{
-		get => config.PlayerNameMaxCount;
-		set => config.PlayerNameMaxCount = value;
+		get => config.LeaderboardSongPlayHistoryRecords;
+		set => config.LeaderboardSongPlayHistoryRecords = value;
+	}
+
+	public bool LeaderboardSongPlayHistoryName
+	{
+		get => config.LeaderboardSongPlayHistoryName;
+		set => config.LeaderboardSongPlayHistoryName = value;
 	}
 
 	public bool ResultsHighScoreFireworks
@@ -49,20 +55,28 @@ internal class SettingsMenu(
 		set => config.ResultsHighScoreSetter = value;
 	}
 
-	public bool LeaderboardSongPlayHistory
+	public bool PlayerNameAutoAccept
 	{
-		get => config.LeaderboardSongPlayHistory;
-		set => config.LeaderboardSongPlayHistory = value;
+		get => config.PlayerNameAutoAccept;
+		set => config.PlayerNameAutoAccept = value;
+	}
+
+	public int PlayerNameMaxCount
+	{
+		get => config.PlayerNameMaxCount;
+		set => config.PlayerNameMaxCount = value;
 	}
 
 	[UIComponent("ModEnabled")] private readonly ToggleSetting _modEnabled = null!;
 	[UIComponent("SoloTracking")] private readonly ToggleSetting _soloTracking = null!;
 	[UIComponent("SoloChooser")] private readonly ToggleSetting _soloChooser = null!;
-	[UIComponent("NameAutoAccept")] private readonly ToggleSetting _nameAutoAccept = null!;
-	[UIComponent("NameCount")] private readonly IncrementSetting _nameCount = null!;
+	[UIComponent("LeaderboardParty")] private readonly ToggleSetting _leaderboardParty = null!;
+	[UIComponent("LeaderboardSPH")] private readonly ToggleSetting _leaderboardSongPlay = null!;
+	[UIComponent("LeaderboardSPHName")] private readonly ToggleSetting _leaderboardSongPlayName = null!;
 	[UIComponent("HighScoreFireworks")] private readonly ToggleSetting _highScoreFireworks = null!;
 	[UIComponent("HighScoreSetter")] private readonly ToggleSetting _highScoreSetter = null!;
-	[UIComponent("LeaderboardSongPlay")] private readonly ToggleSetting _leaderboardSongPlay = null!;
+	[UIComponent("NameAutoAccept")] private readonly ToggleSetting _nameAutoAccept = null!;
+	[UIComponent("NameCount")] private readonly IncrementSetting _nameCount = null!;
 
 	[UIAction("#post-parse")]
 	private void PostParse()
@@ -76,10 +90,12 @@ internal class SettingsMenu(
 		var enabled = _modEnabled.Value;
 		_soloTracking.Interactable = enabled;
 		_soloChooser.Interactable = enabled && _soloTracking.Value;
-		_nameAutoAccept.Interactable = enabled;
-		_nameCount.Interactable = enabled;
+		_leaderboardParty.Interactable = enabled;
+		_leaderboardSongPlay.Interactable = enabled && Plugin.SongPlayHistoryInstalled;
+		_leaderboardSongPlayName.Interactable = enabled && Plugin.SongPlayHistoryInstalled;
 		_highScoreFireworks.Interactable = enabled && _soloTracking.Value;
 		_highScoreSetter.Interactable = enabled && _soloTracking.Value && Plugin.SongPlayHistoryInstalled;
-		_leaderboardSongPlay.Interactable = enabled && Plugin.SongPlayHistoryInstalled;
+		_nameAutoAccept.Interactable = enabled;
+		_nameCount.Interactable = enabled;
 	}
 }

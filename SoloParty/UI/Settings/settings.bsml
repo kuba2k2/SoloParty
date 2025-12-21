@@ -13,7 +13,6 @@
 			text="Enable mod"
 			hover-hint="Enable/disable all features at once"
 			on-change="UpdateUI"/>
-
 		<toggle-setting
 			id="SoloTracking"
 			value="SoloTrackingEnabled"
@@ -28,25 +27,28 @@
 			on-change="UpdateUI"/>
 
 		<text
-			text="Player name chooser (Solo, Party)"
+			text="Leaderboard options"
 			italics="true"
 			font-size="6.5"
 			align="Left"
 			size-delta-y="9"/>
 		<toggle-setting
-			id="NameAutoAccept"
-			value="PlayerNameAutoAccept"
-			text="Auto-accept clicked name"
-			hover-hint="Accept chosen player name without clicking 'OK'"
+			id="LeaderboardParty"
+			value="LeaderboardPartyModeRecords"
+			text="Show scores from Party mode leaderboard"
+			hover-hint="Load and display scores stored externally in the Party mode local leaderboards"
 			on-change="UpdateUI"/>
-		<increment-setting
-			id="NameCount"
-			value="PlayerNameMaxCount"
-			min="1"
-			max="8"
-			integer-only="true"
-			text="Number of last used names to show"
-			hover-hint="Limit the number of last used names in the picker (game default: 5)"
+		<toggle-setting
+			id="LeaderboardSPH"
+			value="LeaderboardSongPlayHistoryRecords"
+			text="Show scores from SongPlayHistory"
+			hover-hint="Load and display scores stored externally in SongPlayHistory"
+			on-change="UpdateUI"/>
+		<toggle-setting
+			id="LeaderboardSPHName"
+			value="LeaderboardSongPlayHistoryName"
+			text="Show player name in SongPlayHistory scores"
+			hover-hint="Prepend each score with players' names in SongPlayHistory score tooltip"
 			on-change="UpdateUI"/>
 
 		<text
@@ -69,16 +71,25 @@
 			on-change="UpdateUI"/>
 
 		<text
-			text="Leaderboard options"
+			text="Player name chooser (Solo, Party)"
 			italics="true"
 			font-size="6.5"
 			align="Left"
 			size-delta-y="9"/>
 		<toggle-setting
-			id="LeaderboardSongPlay"
-			value="LeaderboardSongPlayHistory"
-			text="Show player name in SongPlayHistory scores"
-			hover-hint="Prepend each score with players' names in SongPlayHistory score tooltip"
+			id="NameAutoAccept"
+			value="PlayerNameAutoAccept"
+			text="Auto-accept clicked name"
+			hover-hint="Accept chosen player name without clicking 'OK'"
+			on-change="UpdateUI"/>
+		<increment-setting
+			id="NameCount"
+			value="PlayerNameMaxCount"
+			min="1"
+			max="8"
+			integer-only="true"
+			text="Number of last used names to show"
+			hover-hint="Limit the number of last used names in the picker (game default: 5)"
 			on-change="UpdateUI"/>
 	</settings-container>
 </bg>

@@ -43,7 +43,7 @@ internal sealed class SongPlayHistoryUIPatches(
 	public void Patch()
 	{
 		// unpatch if not enabled in config
-		if (!config.ModEnabled || !config.LeaderboardSongPlayHistory)
+		if (!config.ModEnabled || !config.LeaderboardSongPlayHistoryName)
 		{
 			Unpatch();
 			return;
