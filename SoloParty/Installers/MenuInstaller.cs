@@ -21,6 +21,8 @@ internal class MenuInstaller(
 		Container.BindInterfacesTo<EnterPlayerGuestNameViewControllerPatches>().AsSingle();
 		Container.BindInterfacesTo<RankModelPatches>().AsSingle();
 
+		Container.BindInterfacesTo<PartyLeaderboardRecordProvider>().AsSingle();
+
 		if (Plugin.LeaderboardCoreInstalled)
 		{
 			log.Info("LeaderboardCore found, creating solo leaderboard");
