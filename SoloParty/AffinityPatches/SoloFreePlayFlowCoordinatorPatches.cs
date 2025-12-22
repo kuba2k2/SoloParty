@@ -11,7 +11,8 @@ namespace SoloParty.AffinityPatches;
 
 internal sealed class SoloFreePlayFlowCoordinatorPatches(
 	PluginConfig config,
-	SoloRecordManager recordManager,
+	SoloRecordManager soloRecordManager,
+	ExternalRecordManager externalRecordManager,
 	SiraLog log,
 	EnterPlayerGuestNameViewController enterNameViewController,
 	IHighScoreSetter highScoreSetter
@@ -152,7 +153,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		_isNewHighScore = null;
 		if (playerName != null)
 		{
-			var previousHighScore = recordManager
+			var previousHighScore = externalRecordManager
 				.GetRecordPlayerBest(beatmapKey, playerName)
 				?.ModifiedScore ?? 0;
 			log.Info($"- previous high score was {previousHighScore}");
@@ -218,7 +219,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			IsLatest = true
 		};
 		log.Info($"Saving record: {record}");
-		recordManager.AddRecord(beatmapKey, record);
+		soloRecordManager.AddRecord(beatmapKey, record);
 	}
 
 	[AffinityPrefix]
