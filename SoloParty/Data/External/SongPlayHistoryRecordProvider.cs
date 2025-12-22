@@ -18,7 +18,7 @@ internal class SongPlayHistoryRecordProvider(
 {
 	public override string ProviderName => "SongPlayHistory";
 
-	public readonly ConcurrentDictionary<BeatmapKey, Tuple<int, int>> ScoringCache = new();
+	private readonly ConcurrentDictionary<BeatmapKey, Tuple<int, int>> _scoringCache = new();
 
 	public void Initialize()
 	{
@@ -28,6 +28,14 @@ internal class SongPlayHistoryRecordProvider(
 	public void Dispose()
 	{
 		externalManager.Unregister(this);
+	}
+
+	public void AddScoringInfo(BeatmapKey beatmapKey, int notesCount, int maxMultipliedScore)
+	{
+		if (_scoringCache.ContainsKey(beatmapKey))
+			return;
+		_scoringCache[beatmapKey] = new Tuple<int, int>(notesCount, maxMultipliedScore);
+		InvokeRecordsUpdated(beatmapKey);
 	}
 
 	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
@@ -43,7 +51,7 @@ internal class SongPlayHistoryRecordProvider(
 	private SoloRecord ConvertRecord(BeatmapKey beatmapKey, ISongPlayRecord record)
 	{
 		// fetch scoring info from cache
-		var (notesCount, maxMultipliedScore) = ScoringCache
+		var (notesCount, maxMultipliedScore) = _scoringCache
 			.GetValueOrDefault(beatmapKey, new Tuple<int, int>(-1, -1));
 
 		var endState = record.LevelEnd == LevelEndType.Cleared ? EndState.Cleared : EndState.SoftFailed;

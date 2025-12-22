@@ -133,7 +133,6 @@ internal sealed class SongPlayHistoryCachePatches(
 	)
 	{
 		// insert scoring info into SongPlayHistoryRecordProvider's cache
-		_instance?._recordProvider.ScoringCache[beatmapKey] =
-			new Tuple<int, int>(beatmapData.cuttableNotesCount, fullMaxScore);
+		_instance?._recordProvider.AddScoringInfo(beatmapKey, beatmapData.cuttableNotesCount, fullMaxScore);
 	}
 }

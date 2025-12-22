@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SoloParty.Data.Models;
 using Zenject;
@@ -7,7 +8,7 @@ namespace SoloParty.Data.Manager;
 
 public class ExternalRecordManager(
 	SoloRecordManager recordManager
-) : AbstractRecordProvider
+) : AbstractRecordProvider, IInitializable, IDisposable
 {
 	public override string ProviderName => "External";
 
@@ -15,11 +16,22 @@ public class ExternalRecordManager(
 
 	[Inject] private readonly PluginConfig _config = null!;
 
+	public void Initialize()
+	{
+		recordManager.RecordsUpdatedEvent += InvokeRecordsUpdated;
+	}
+
+	public void Dispose()
+	{
+		recordManager.RecordsUpdatedEvent -= InvokeRecordsUpdated;
+	}
+
 	public void Register(AbstractRecordProvider provider)
 	{
 		if (_providers.Contains(provider))
 			return;
 		_providers.Add(provider);
+		provider.RecordsUpdatedEvent += InvokeRecordsUpdated;
 	}
 
 	public void Unregister(AbstractRecordProvider provider)
@@ -27,6 +39,7 @@ public class ExternalRecordManager(
 		if (!_providers.Contains(provider))
 			return;
 		_providers.Remove(provider);
+		provider.RecordsUpdatedEvent -= InvokeRecordsUpdated;
 	}
 
 	public AbstractRecordProvider? GetByName(string providerName)

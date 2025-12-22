@@ -117,10 +117,13 @@ public class SoloRecordManager(
 		{
 			r.IsLatest = false;
 		}
+
 		// add the new record
 		records.Add(record);
 		_recordsModified = true;
 		SaveRecords(_dataFilePath);
+		// notify listeners
+		InvokeRecordsUpdated(beatmapKey);
 	}
 
 	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
