@@ -76,8 +76,10 @@ internal class LeaderboardViewRow
 			return;
 		}
 
-		var modifiers = record.Modifiers.ToModifierString();
+		var modifiers = record.Modifiers.ToModifierString(withNoFail: record.EndState == EndState.SoftFailed);
 		var hint = record.Modifiers.ToModifierDescription();
+		if (modifiers.Length == 0)
+			modifiers = " ";
 		_modifiers.text = $"<color={DimColor}>{modifiers}</color>";
 		_modifiers.SetHint(hint);
 	}

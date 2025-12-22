@@ -58,13 +58,14 @@ public static class ModifierExtensions
 
 	extension(Modifier modifier)
 	{
-		public string ToModifierString()
+		public string ToModifierString(bool withNoFail = true)
 		{
 			if (modifier == Modifier.None)
 				return "";
 
 			var modifiers = Modifiers
 				.Where(tuple => modifier.HasFlag(tuple.Item1))
+				.Where(tuple => tuple.Item1 != Modifier.NoFail || withNoFail)
 				.Select(tuple => tuple.Item2)
 				.ToList();
 
