@@ -141,6 +141,8 @@
 
 	<ItemGroup>
 	  <EmbeddedResource Include="UI\Settings\settings.bsml" />
+	  <EmbeddedResource Include="UI\Leaderboard\PanelView.bsml" />
+	  <EmbeddedResource Include="UI\Leaderboard\LeaderboardView.bsml" />
 	</ItemGroup>
 
 </Project>
