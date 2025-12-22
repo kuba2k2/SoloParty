@@ -14,9 +14,9 @@ namespace SoloParty.Data.Manager;
 
 public class SoloRecordManager(
 	SiraLog log
-) : IInitializable, IDisposable, ISoloRecordProvider
+) : AbstractRecordProvider, IInitializable, IDisposable
 {
-	public string ProviderName => "SoloParty";
+	public override string ProviderName => "SoloParty";
 
 	private readonly string _dataFilePath = Path.Combine(UnityGame.UserDataPath, "SoloPartyData.json");
 	private readonly string _backupFilePath = Path.Combine(UnityGame.UserDataPath, "SoloPartyData.json.bak");
@@ -123,7 +123,7 @@ public class SoloRecordManager(
 		SaveRecords(_dataFilePath);
 	}
 
-	public List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
+	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
 		return _records.TryGetValue(beatmapKey.ToBeatmapKeyString(), out var records)
 			? records.ToList()

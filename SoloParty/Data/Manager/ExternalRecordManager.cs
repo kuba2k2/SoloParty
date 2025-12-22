@@ -7,34 +7,34 @@ namespace SoloParty.Data.Manager;
 
 public class ExternalRecordManager(
 	SoloRecordManager recordManager
-) : ISoloRecordProvider
+) : AbstractRecordProvider
 {
-	public string ProviderName => "External";
+	public override string ProviderName => "External";
 
-	private readonly IList<ISoloRecordProvider> _providers = [];
+	private readonly IList<AbstractRecordProvider> _providers = [];
 
 	[Inject] private readonly PluginConfig _config = null!;
 
-	public void Register(ISoloRecordProvider provider)
+	public void Register(AbstractRecordProvider provider)
 	{
 		if (_providers.Contains(provider))
 			return;
 		_providers.Add(provider);
 	}
 
-	public void Unregister(ISoloRecordProvider provider)
+	public void Unregister(AbstractRecordProvider provider)
 	{
 		if (!_providers.Contains(provider))
 			return;
 		_providers.Remove(provider);
 	}
 
-	public ISoloRecordProvider? GetByName(string providerName)
+	public AbstractRecordProvider? GetByName(string providerName)
 	{
 		return _providers.FirstOrDefault(provider => provider.ProviderName == providerName);
 	}
 
-	public List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
+	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
 		var soloRecords = recordManager.GetRecords(beatmapKey);
 		var allRecords = soloRecords.ToList();

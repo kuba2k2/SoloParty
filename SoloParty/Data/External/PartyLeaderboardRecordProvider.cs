@@ -10,9 +10,9 @@ namespace SoloParty.Data.External;
 internal class PartyLeaderboardRecordProvider(
 	ExternalRecordManager externalManager,
 	LocalLeaderboardsModel localLeaderboardsModel
-) : IInitializable, IDisposable, ISoloRecordProvider
+) : AbstractRecordProvider, IInitializable, IDisposable
 {
-	public string ProviderName => "PartyLeaderboard";
+	public override string ProviderName => "PartyLeaderboard";
 
 	public void Initialize()
 	{
@@ -24,7 +24,7 @@ internal class PartyLeaderboardRecordProvider(
 		externalManager.Unregister(this);
 	}
 
-	public List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
+	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
 		var leaderboardId = LocalLeaderboardsIdModel.GetLocalLeaderboardID(beatmapKey);
 		return localLeaderboardsModel

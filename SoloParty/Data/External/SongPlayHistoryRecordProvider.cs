@@ -13,9 +13,9 @@ namespace SoloParty.Data.External;
 internal class SongPlayHistoryRecordProvider(
 	ExternalRecordManager externalManager,
 	IRecordManager songPlayManager
-) : IInitializable, IDisposable, ISoloRecordProvider
+) : AbstractRecordProvider, IInitializable, IDisposable
 {
-	public string ProviderName => "SongPlayHistory";
+	public override string ProviderName => "SongPlayHistory";
 
 	public void Initialize()
 	{
@@ -27,7 +27,7 @@ internal class SongPlayHistoryRecordProvider(
 		externalManager.Unregister(this);
 	}
 
-	public List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
+	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
 	{
 		return songPlayManager
 			.GetRecords(beatmapKey)
