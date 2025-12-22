@@ -159,12 +159,19 @@ internal class LeaderboardViewRow
 			case EndState.SoftFailed:
 			case EndState.Failed:
 				if (record.NotesCount == -1 || record.NotesPassed == -1)
-					goto unknown;
-				var notesLeft = record.NotesCount - record.NotesPassed;
-				mistakes = notesLeft >= 100
-					? $"<size=70%>+{notesLeft}</size>"
-					: $"+{notesLeft}";
-				hint = $"Failed after {record.NotesPassed}/{record.NotesCount} notes";
+				{
+					mistakes = "<size=70%>FAIL</size>";
+					hint = "Failed";
+				}
+				else
+				{
+					var notesLeft = record.NotesCount - record.NotesPassed;
+					mistakes = notesLeft >= 100
+						? $"<size=70%>+{notesLeft}</size>"
+						: $"+{notesLeft}";
+					hint = $"Failed after {record.NotesPassed}/{record.NotesCount} notes";
+				}
+
 				color = FailedColor;
 				break;
 
