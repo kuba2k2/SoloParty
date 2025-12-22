@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using SoloParty.Data.Manager;
@@ -17,6 +18,8 @@ internal class SongPlayHistoryRecordProvider(
 {
 	public override string ProviderName => "SongPlayHistory";
 
+	public readonly ConcurrentDictionary<BeatmapKey, Tuple<int, int>> ScoringCache = new();
+
 	public void Initialize()
 	{
 		externalManager.Register(this);
@@ -33,12 +36,16 @@ internal class SongPlayHistoryRecordProvider(
 			.GetRecords(beatmapKey)
 			// take only cleared or soft-failed records
 			.Where(record => record.LevelEnd == LevelEndType.Cleared || record.Params.HasFlag(SongPlayParam.NoFail))
-			.Select(ConvertRecord)
+			.Select(record => ConvertRecord(beatmapKey, record))
 			.ToList();
 	}
 
-	private static SoloRecord ConvertRecord(ISongPlayRecord record)
+	private SoloRecord ConvertRecord(BeatmapKey beatmapKey, ISongPlayRecord record)
 	{
+		// fetch scoring info from cache
+		var (notesCount, maxMultipliedScore) = ScoringCache
+			.GetValueOrDefault(beatmapKey, new Tuple<int, int>(-1, -1));
+
 		var endState = record.LevelEnd == LevelEndType.Cleared ? EndState.Cleared : EndState.SoftFailed;
 		return new SoloRecord
 		{
@@ -46,7 +53,10 @@ internal class SongPlayHistoryRecordProvider(
 			// SPH saves score at the time of soft-fail, but we don't want that here, so set it as "unknown"
 			ModifiedScore = endState == EndState.Cleared ? record.ModifiedScore : -1,
 			MultipliedScore = endState == EndState.Cleared ? record.RawScore : -1,
+			MaxModifiedScore = -1,
+			MaxMultipliedScore = maxMultipliedScore,
 			NotesPassed = record.LastNote,
+			NotesCount = notesCount,
 			EndState = endState,
 			Modifiers = record.Params.ToSoloModifier(),
 			IsExternal = true

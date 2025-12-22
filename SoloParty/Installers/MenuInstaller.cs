@@ -33,10 +33,11 @@ internal class MenuInstaller(
 
 		if (Plugin.SongPlayHistoryInstalled)
 		{
-			log.Info("SongPlayHistory found, enabling high score setter and UI patches");
+			log.Info("SongPlayHistory found, enabling high score setter and patches");
 			Container.BindInterfacesTo<SongPlayHistoryHighScoreSetter>().AsSingle();
-			Container.BindInterfacesTo<SongPlayHistoryRecordProvider>().AsSingle();
+			Container.BindInterfacesAndSelfTo<SongPlayHistoryRecordProvider>().AsSingle();
 			Container.BindInterfacesAndSelfTo<SongPlayHistoryUIPatches>().AsSingle();
+			Container.BindInterfacesAndSelfTo<SongPlayHistoryCachePatches>().AsSingle();
 		}
 		else
 		{

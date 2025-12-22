@@ -66,11 +66,12 @@ public class SoloRecord : IComparable<SoloRecord>
 
 	public void FillMaxScore(int maxMultipliedScore)
 	{
-		if (MaxMultipliedScore != -1 && MaxModifiedScore != -1)
+		if (MaxMultipliedScore == -1)
+			MaxMultipliedScore = maxMultipliedScore;
+		if (MaxModifiedScore != -1)
 			return;
 		var totalMultiplier = Modifiers.GetTotalMultiplier(softFailed: EndState == EndState.SoftFailed);
-		MaxMultipliedScore = maxMultipliedScore;
-		MaxModifiedScore = Mathf.FloorToInt(maxMultipliedScore * totalMultiplier);
+		MaxModifiedScore = Mathf.FloorToInt(MaxMultipliedScore * totalMultiplier);
 	}
 
 	public void FillNotesCount(int notesCount)
