@@ -55,8 +55,14 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 	protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
 	{
 		base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-		if (isActivated)
-			ShowLeaderboard();
+		_recordManager.RecordsUpdatedEvent += OnRecordsUpdated;
+		ShowLeaderboard();
+	}
+
+	protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
+	{
+		_recordManager.RecordsUpdatedEvent -= OnRecordsUpdated;
+		base.DidDeactivate(removedFromHierarchy, screenSystemDisabling);
 	}
 
 	public void OnLeaderboardSet(BeatmapKey beatmapKey)
@@ -67,8 +73,16 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 		_beatmapKey = beatmapKey;
 		_allRecords = _recordManager.GetRecords(beatmapKey);
 		_offset = 0;
-		if (isActivated)
-			ShowLeaderboard();
+		ShowLeaderboard();
+	}
+
+	public void OnRecordsUpdated(BeatmapKey beatmapKey)
+	{
+		_log.Info($"Records updated: {beatmapKey.ToBeatmapKeyString()}");
+		if (beatmapKey != _beatmapKey)
+			return;
+		_allRecords = _recordManager.GetRecords(beatmapKey);
+		ShowLeaderboard();
 	}
 
 	public void OnPageUpClick()
@@ -98,6 +112,8 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 
 	private void ShowLeaderboard()
 	{
+		if (!isActivated)
+			return;
 		_pageUp.interactable = _offset > 0;
 		_pageDown.interactable = _offset + 10 < _allRecords.Count;
 		_sortControl.SelectCellWithNumber((int)_config.LeaderboardSortType);
