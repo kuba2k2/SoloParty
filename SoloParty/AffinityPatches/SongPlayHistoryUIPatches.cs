@@ -148,16 +148,11 @@ internal sealed class SongPlayHistoryUIPatches(
 		// for logging
 		var infoString = $"beatmapKey: {beatmapKey.ToBeatmapKeyString()}, date: {date}, modifiedScore: {modifiedScore}";
 
-		if (record?.PlayerName != null)
-		{
-			_instance._log.Debug($"Inserting player name '{record.PlayerName}' for {infoString}");
-			builder.Append($"<size=2.5><color=#1a252bff> {record.PlayerName} - </color></size>");
-		}
-		else
-		{
-			_instance._log.Warn($"No player name for {infoString}");
-		}
+		if (record?.PlayerName == null)
+			return builder;
 
+		_instance._log.Debug($"Inserting player name '{record.PlayerName}' for {infoString}");
+		builder.Append($"<size=2.5><color=#1a252bff> {record.PlayerName} - </color></size>");
 		return builder;
 	}
 }
