@@ -12,6 +12,8 @@
 		child-expand-width="false">
 
 		<vertical
+			anchor-pos-x="-41.25"
+			ignore-layout="true"
 			vertical-fit="PreferredSize"
 			spacing="1"
 			child-expand-width="false">
@@ -82,6 +84,8 @@
 		</horizontal>
 
 		<vertical
+			anchor-pos-x="7.25"
+			ignore-layout="true"
 			pref-width="78"
 			pref-height="60"
 			pad-bottom="1"

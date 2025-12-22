@@ -55,7 +55,7 @@ internal class LeaderboardView : BSMLAutomaticViewController, INotifyLeaderboard
 	protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
 	{
 		base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-		if (isActiveAndEnabled && firstActivation)
+		if (isActivated)
 			ShowLeaderboard();
 	}
 
