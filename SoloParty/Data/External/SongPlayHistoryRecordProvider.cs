@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using SoloParty.Data.Manager;
 using SoloParty.Data.Models;
 using SoloParty.Utils;
@@ -13,8 +15,9 @@ namespace SoloParty.Data.External;
 
 internal class SongPlayHistoryRecordProvider(
 	ExternalRecordManager externalManager,
+	ExternalImportManager importManager,
 	IRecordManager songPlayManager
-) : AbstractRecordProvider, IInitializable, IDisposable
+) : AbstractRecordImporter, IInitializable, IDisposable
 {
 	public override string ProviderName => "SongPlayHistory";
 
@@ -23,10 +26,12 @@ internal class SongPlayHistoryRecordProvider(
 	public void Initialize()
 	{
 		externalManager.Register(this);
+		importManager.Register(this);
 	}
 
 	public void Dispose()
 	{
+		importManager.Unregister(this);
 		externalManager.Unregister(this);
 	}
 
@@ -49,6 +54,32 @@ internal class SongPlayHistoryRecordProvider(
 			.Select(record => ConvertRecord(beatmapKey, record))
 			.Where(record => record.ModifiedScore != -1)
 			.ToList();
+	}
+
+	public override Dictionary<string, List<SoloRecord>> GetAllRecords()
+	{
+		var records =
+			songPlayManager
+				.GetType()
+				.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+				.FirstOrDefault(property => property.Name == "Records")
+				?.GetGetMethod(true)
+				?.Invoke(songPlayManager, []);
+
+		var result = new Dictionary<string, List<SoloRecord>>();
+		if (records == null)
+			return result;
+
+		foreach (DictionaryEntry entry in (IDictionary)records!)
+		{
+			var list = (
+				from object? record in (IEnumerable)entry.Value
+				select ConvertRecord(default, (ISongPlayRecord)record!)
+			).ToList();
+			result.Add((string)entry.Key, list);
+		}
+
+		return result;
 	}
 
 	private SoloRecord ConvertRecord(BeatmapKey beatmapKey, ISongPlayRecord record)
