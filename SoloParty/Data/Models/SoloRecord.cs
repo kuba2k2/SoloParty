@@ -66,6 +66,15 @@ public class SoloRecord : IComparable<SoloRecord>
 
 	public void FillMaxScore(int maxMultipliedScore)
 	{
+		// if the modified score is less than half the maximum multiplied score, NoFail was probably used
+		// (this should only apply to PartyLeaderboard records anyway)
+		if (ModifiedScore <= maxMultipliedScore / 2 && Modifiers == Modifier.None && IsExternal &&
+		    EndState == EndState.Cleared)
+		{
+			Modifiers = Modifier.NoFail;
+			EndState = EndState.SoftFailed;
+		}
+
 		if (MaxMultipliedScore == -1)
 			MaxMultipliedScore = maxMultipliedScore;
 		if (MaxModifiedScore != -1)
