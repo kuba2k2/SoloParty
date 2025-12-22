@@ -59,7 +59,8 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"EndState = {EndState}, " +
 		       $"Modifiers = {Modifiers.ToModifierString()}, " +
 		       $"PlayerName = {PlayerName}, " +
-		       $"IsExternal = {IsExternal} " +
+		       $"IsExternal = {IsExternal}, " +
+		       $"IsLatest = {IsLatest} " +
 		       $"}}";
 	}
 
@@ -144,6 +145,8 @@ public class SoloRecord : IComparable<SoloRecord>
 			PlayerName = other.PlayerName;
 		if (!other.IsExternal)
 			IsExternal = false;
+		if (other.IsLatest)
+			IsLatest = true;
 	}
 
 	public static SoloRecord MergeAll(List<SoloRecord> records)
