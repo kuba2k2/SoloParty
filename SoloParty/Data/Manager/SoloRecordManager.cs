@@ -129,19 +129,4 @@ public class SoloRecordManager(
 			? records.ToList()
 			: [];
 	}
-
-	public SoloRecord? GetRecordPlayerBest(BeatmapKey beatmapKey, string playerName)
-	{
-		return GetRecords(beatmapKey)
-			.Where(record => record.PlayerName == playerName)
-			.OrderByDescending(record => record.ModifiedScore)
-			.FirstOrDefault();
-	}
-
-	public SoloRecord? GetRecordMatching(BeatmapKey beatmapKey, long date, int modifiedScore)
-	{
-		return GetRecords(beatmapKey)
-			.Where(record => record.ModifiedScore == modifiedScore)
-			.FirstOrDefault(record => Math.Abs(record.Date - date) <= 10000);
-	}
 }
