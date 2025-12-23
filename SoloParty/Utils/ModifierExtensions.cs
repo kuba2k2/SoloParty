@@ -56,6 +56,13 @@ public static class ModifierExtensions
 		return modifier;
 	}
 
+	public static Modifier ToSoloModifier(this List<string> modifiers)
+	{
+		return Modifiers
+			.Where(tuple => modifiers.Contains(tuple.Item2))
+			.Aggregate(Modifier.None, (modifier, tuple) => modifier | tuple.Item1);
+	}
+
 	extension(Modifier modifier)
 	{
 		public string ToModifierString(bool withNoFail = true)
