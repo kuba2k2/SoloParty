@@ -133,6 +133,7 @@ internal class SettingsMenu(
 			"<color=red> </color>" +
 			ImportMessageSuffix;
 		_importPlayerName.gameObject.SetActive(false);
+		_importPlayerName.Text = "";
 		_parserParams.EmitEvent("show-import");
 	}
 
@@ -174,7 +175,7 @@ internal class SettingsMenu(
 		var importer = importManager.GetByName(_importProviderName);
 		if (importer == null)
 			return;
-		var playerName = _importPlayerName.isActiveAndEnabled ? _importPlayerName.Text : null;
+		var playerName = _importPlayerName.Text;
 		if (playerName == "")
 			playerName = null;
 
