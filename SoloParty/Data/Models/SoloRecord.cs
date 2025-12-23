@@ -93,6 +93,7 @@ public class SoloRecord : IComparable<SoloRecord>
 			case EndState.FullCombo:
 				NotesPassed = NotesCount;
 				GoodCutsCount = NotesCount;
+				MaxCombo = NotesCount;
 				BadCutsCount = 0;
 				MissedCount = 0;
 				break;
