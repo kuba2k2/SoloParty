@@ -220,6 +220,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		};
 		log.Info($"Saving record: {record}");
 		soloRecordManager.AddRecord(beatmapKey, record);
+		soloRecordManager.SaveRecords();
 	}
 
 	[AffinityPrefix]

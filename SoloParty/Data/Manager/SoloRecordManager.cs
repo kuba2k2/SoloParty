@@ -35,7 +35,7 @@ public class SoloRecordManager(
 		else
 		{
 			log.Info("Records file loaded, creating a backup");
-			BackupRecords(_dataFilePath, _backupFilePath);
+			BackupRecords(_backupFilePath);
 			_recordsModified = false;
 		}
 
@@ -47,7 +47,7 @@ public class SoloRecordManager(
 
 	public void Dispose()
 	{
-		SaveRecords(_dataFilePath);
+		SaveRecords();
 	}
 
 	private bool LoadRecords(string filePath)
@@ -75,43 +75,57 @@ public class SoloRecordManager(
 		}
 	}
 
-	private void SaveRecords(string filePath)
+	public void SaveRecords(bool force = false)
 	{
-		if (!_recordsModified)
+		if (!_recordsModified && !force)
 			return;
 
-		log.Info($"Saving records to {filePath}");
+		log.Info($"Saving records to {_dataFilePath}");
 		try
 		{
 			var serialized = JsonConvert.SerializeObject(_records, Formatting.Indented);
-			File.WriteAllText(filePath, serialized);
+			File.WriteAllText(_dataFilePath, serialized);
 			_recordsModified = false;
 		}
 		catch (Exception e)
 		{
-			log.Error($"Unable to save {filePath}");
+			log.Error($"Unable to save {_dataFilePath}");
 			log.Error(e);
 		}
 	}
 
-	private void BackupRecords(string sourcePath, string backupPath)
+	private void BackupRecords(string backupPath)
 	{
-		if (!File.Exists(sourcePath))
+		if (!File.Exists(_dataFilePath))
 			return;
 		try
 		{
-			File.Copy(sourcePath, backupPath, true);
+			File.Copy(_dataFilePath, backupPath, true);
 		}
 		catch (Exception e)
 		{
-			log.Error($"Unable to create backup {sourcePath} -> {backupPath}");
+			log.Error($"Unable to create backup {_dataFilePath} -> {backupPath}");
 			log.Error(e);
 		}
+	}
+
+	public void CreateBackup(string backupName)
+	{
+		var dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+		var backupPath = Path.Combine(UnityGame.UserDataPath, $"SoloPartyData_{dateTime}_{backupName}.json.bak");
+		BackupRecords(backupPath);
 	}
 
 	public void AddRecord(BeatmapKey beatmapKey, SoloRecord record)
 	{
-		var records = _records.GetOrAdd(beatmapKey.ToBeatmapKeyString(), new List<SoloRecord>());
+		AddRecord(beatmapKey.ToBeatmapKeyString(), record);
+		// notify listeners
+		InvokeRecordsUpdated(beatmapKey);
+	}
+
+	public void AddRecord(string beatmapKey, SoloRecord record)
+	{
+		var records = _records.GetOrAdd(beatmapKey, new List<SoloRecord>());
 		// clear IsLatest flag of all previous records
 		foreach (var r in records)
 		{
@@ -121,14 +135,14 @@ public class SoloRecordManager(
 		// add the new record
 		records.Add(record);
 		_recordsModified = true;
-		SaveRecords(_dataFilePath);
-		// notify listeners
-		InvokeRecordsUpdated(beatmapKey);
 	}
 
-	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey)
+	public override List<SoloRecord> GetRecords(BeatmapKey beatmapKey) =>
+		GetRecords(beatmapKey.ToBeatmapKeyString());
+
+	public List<SoloRecord> GetRecords(string beatmapKey)
 	{
-		return _records.TryGetValue(beatmapKey.ToBeatmapKeyString(), out var records)
+		return _records.TryGetValue(beatmapKey, out var records)
 			? records.ToList()
 			: [];
 	}
