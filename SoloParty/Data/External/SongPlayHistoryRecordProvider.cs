@@ -91,7 +91,7 @@ internal class SongPlayHistoryRecordProvider(
 		var endState = record.LevelEnd == LevelEndType.Cleared ? EndState.Cleared : EndState.SoftFailed;
 
 		// apparently SPH doesn't always set LastNote at the time of soft-fail, so try to detect one
-		if (record.Params.HasFlag(SongPlayParam.NoFail) && record.ModifiedScore <= record.RawScore / 2)
+		if (record.Params.HasFlag(SongPlayParam.NoFail) && record.ModifiedScore - 2 <= record.RawScore / 2)
 			endState = EndState.SoftFailed;
 
 		return new SoloRecord
