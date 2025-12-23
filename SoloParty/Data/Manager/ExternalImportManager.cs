@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SoloParty.Data.Manager;
 
@@ -19,4 +21,18 @@ public class ExternalImportManager
 			return;
 		_importers.Remove(importer);
 	}
+
+	public AbstractRecordImporter? GetByName(string providerName)
+	{
+		return _importers.FirstOrDefault(provider => provider.ProviderName == providerName);
+	}
+
+	public class ImportResult
+	{
+		public int AddCount;
+		public int MergeCount;
+	}
+
+	public Task<ImportResult> ImportRecords(AbstractRecordImporter importer, string? playerName) =>
+		Task.Run(() => new ImportResult());
 }

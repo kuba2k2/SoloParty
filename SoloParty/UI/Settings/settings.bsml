@@ -38,18 +38,25 @@
 			text="Show scores from Party mode leaderboard"
 			hover-hint="Load and display scores stored externally in the Party mode local leaderboards"
 			on-change="UpdateUI"/>
+		<action-button text="Import all" on-click="OnImportPartyClick"/>
 		<toggle-setting
 			id="LeaderboardSPH"
 			value="LeaderboardSongPlayHistoryRecords"
 			text="Show scores from SongPlayHistory"
 			hover-hint="Load and display scores stored externally in SongPlayHistory"
 			on-change="UpdateUI"/>
+		<primary-button text="Import all" on-click="OnImportSongPlayHistoryClick"/>
 		<toggle-setting
 			id="LeaderboardSPHName"
 			value="LeaderboardSongPlayHistoryName"
 			text="Show player name in SongPlayHistory scores"
 			hover-hint="Prepend each score with players' names in SongPlayHistory score tooltip"
 			on-change="UpdateUI"/>
+		<toggle-setting
+			id="LeaderboardBSD"
+			text="Show scores from BeatSaviorData"
+			hover-hint="This option is not available; import data instead"/>
+		<primary-button text="Import all" on-click="OnImportBeatSaviorDataClick"/>
 
 		<text
 			text="Level results screen"
@@ -91,5 +98,97 @@
 			text="Number of last used names to show"
 			hover-hint="Limit the number of last used names in the picker (game default: 5)"
 			on-change="UpdateUI"/>
+
+		<modal
+			size-delta-x="85"
+			size-delta-y="62"
+			show-event="show-import"
+			hide-event="hide-import"
+			click-off-closes="true">
+			<vertical pref-width="80" horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+				<horizontal bg="title-gradient" bg-color="#00BEFC" bg-alpha="1">
+					<text
+						id="ImportTitle"
+						text="Title"
+						italics="true"
+						font-align="Capline"
+						all-uppercase="true"
+						font-size="5"/>
+				</horizontal>
+				<horizontal pref-height="2"/>
+				<text
+					id="ImportMessage"
+					text="Message"
+					font-align="Midline"
+					word-wrapping="true"/>
+				<horizontal pad-left="15" pref-height="8">
+					<string-setting
+						id="ImportPlayerName"
+						text="Default player name"
+						hover-hint="Optionally, apply the chosen player name to all imported records"/>
+				</horizontal>
+				<horizontal>
+					<button text="Cancel" click-event="hide-import"/>
+					<primary-button text="Import" on-click="OnImportStartClick"/>
+				</horizontal>
+			</vertical>
+		</modal>
+
+		<modal
+			size-delta-x="85"
+			size-delta-y="31"
+			show-event="show-progress"
+			hide-event="hide-progress"
+			click-off-closes="false">
+			<vertical pref-width="80" horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+				<horizontal bg="title-gradient" bg-color="#00BEFC" bg-alpha="1">
+					<text
+						text="Importing data"
+						italics="true"
+						font-align="Capline"
+						all-uppercase="true"
+						font-size="5"/>
+				</horizontal>
+				<horizontal pref-height="2"/>
+				<text
+					text="This can take some time..."
+					font-align="Midline"
+					word-wrapping="true"/>
+				<horizontal
+					pref-width="10"
+					pref-height="10"
+					horizontal-fit="PreferredSize"
+					vertical-fit="PreferredSize">
+					<loading-indicator/>
+				</horizontal>
+			</vertical>
+		</modal>
+
+		<modal
+			size-delta-x="85"
+			size-delta-y="34"
+			show-event="show-success"
+			hide-event="hide-success"
+			click-off-closes="true">
+			<vertical pref-width="80" horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+				<horizontal bg="title-gradient" bg-color="#00BEFC" bg-alpha="1">
+					<text
+						text="Import completed"
+						italics="true"
+						font-align="Capline"
+						all-uppercase="true"
+						font-size="5"/>
+				</horizontal>
+				<horizontal pref-height="2"/>
+				<text
+					id="SuccessMessage"
+					text="Message"
+					font-align="Midline"
+					word-wrapping="true"/>
+				<horizontal>
+					<primary-button text="OK" click-event="hide-success"/>
+				</horizontal>
+			</vertical>
+		</modal>
 	</settings-container>
 </bg>
