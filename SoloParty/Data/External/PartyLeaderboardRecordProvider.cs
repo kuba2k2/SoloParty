@@ -15,6 +15,9 @@ internal class PartyLeaderboardRecordProvider(
 {
 	public override string ProviderName => "PartyLeaderboard";
 
+	private readonly List<string> _difficultyList = ["Easy", "Normal", "Hard", "Expert", "ExpertPlus"];
+	private readonly List<string> _characteristicList = ["Standard", "OneSaber", "NoArrows", "90Degree", "360Degree", "Lawless"];
+
 	public void Initialize()
 	{
 		externalManager.Register(this);
@@ -63,22 +66,19 @@ internal class PartyLeaderboardRecordProvider(
 		};
 	}
 
-	private static string ConvertLeaderboardId(string leaderboardId)
+	private string ConvertLeaderboardId(string leaderboardId)
 	{
-		List<string> difficultyList = ["Easy", "Normal", "Hard", "Expert", "ExpertPlus"];
-		List<string> characteristicList = ["Standard", "OneSaber", "NoArrows", "90Degree", "360Degree", "Lawless"];
-
-		var difficulty = difficultyList.FirstOrDefault(leaderboardId.EndsWith);
+		var difficulty = _difficultyList.FirstOrDefault(leaderboardId.EndsWith);
 		if (difficulty == null)
 			return "";
 		leaderboardId = leaderboardId[..^difficulty.Length];
 
-		var characteristic = characteristicList.FirstOrDefault(leaderboardId.EndsWith);
+		var characteristic = _characteristicList.FirstOrDefault(leaderboardId.EndsWith);
 		if (characteristic != null)
 			leaderboardId = leaderboardId[..^difficulty.Length];
 		else
 			characteristic = "Standard";
 
-		return $"{leaderboardId}___{difficultyList.IndexOf(difficulty)}___{characteristic}";
+		return $"{leaderboardId}___{_difficultyList.IndexOf(difficulty)}___{characteristic}";
 	}
 }
