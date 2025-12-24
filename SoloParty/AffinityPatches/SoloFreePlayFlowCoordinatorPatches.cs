@@ -1,4 +1,5 @@
 using System;
+using BS_Utils.Gameplay;
 using HMUI;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
@@ -81,6 +82,13 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		if (practice || levelCompletionResults.gameplayModifiers.zenMode)
 		{
 			log.Info("Skipping result handling: practice or zen mode");
+			return true;
+		}
+
+		// skip if score submission was disabled
+		if (ScoreSubmission.WasDisabled)
+		{
+			log.Info($"Skipping result handling: score submission disabled by {ScoreSubmission.LastDisabledModString}");
 			return true;
 		}
 
