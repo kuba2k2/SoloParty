@@ -184,10 +184,13 @@ internal class SettingsMenu(
 			.ImportRecords(importer, playerName)
 			.ContinueWith(async task =>
 			{
-				var result = task.Result;
 				await UnityGame.SwitchToMainThreadAsync();
 				_parserParams.EmitEvent("hide-progress");
-				_successMessage.text = $"{result.AddCount} record(s) added.<br>{result.MergeCount} record(s) updated.";
+				_successMessage.text = task.IsFaulted
+					? $"<color=#ff0000>Import failed: {task.Exception}</color>"
+					: $"{task.Result.AddCount} record(s) added.<br>" +
+					  $"{task.Result.MergeCount} record(s) updated.<br>" +
+					  $"{task.Result.SameCount} record(s) unchanged.";
 				_parserParams.EmitEvent("show-success");
 			});
 	}

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,6 +31,7 @@ public class ExternalImportManager
 	{
 		public int AddCount;
 		public int MergeCount;
+		public int SameCount;
 	}
 
 	public Task<ImportResult> ImportRecords(AbstractRecordImporter importer, string? playerName) =>
