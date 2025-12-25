@@ -124,12 +124,14 @@ public class SoloRecord : IComparable<SoloRecord>
 		return ModifiedScore == other.ModifiedScore;
 	}
 
-	public void MergeFrom(SoloRecord other, bool mustMatch = true)
+	public void MergeFrom(SoloRecord other, bool mustMatch = true, bool mergeDate = true)
 	{
 		if (mustMatch && !Matches(other))
 			throw new ArgumentException("Records don't match");
-		if (Date % 1000 == 0)
+		if (mergeDate && Date % 1000 == 0)
 			Date = other.Date;
+		if (ModifiedScore == -1 && other.ModifiedScore != -1)
+			ModifiedScore = other.ModifiedScore;
 		if (MultipliedScore == -1 && other.MultipliedScore != -1)
 			MultipliedScore = other.MultipliedScore;
 		if (MaxModifiedScore == -1 && other.MaxModifiedScore != -1)

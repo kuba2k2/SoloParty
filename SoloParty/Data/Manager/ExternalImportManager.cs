@@ -96,6 +96,7 @@ public class ExternalImportManager(
 				continue;
 			}
 
+			var mergeAllRecords = false;
 			foreach (var extRecord in extRecords)
 			{
 				// find a matching SoloRecord
@@ -118,7 +119,7 @@ public class ExternalImportManager(
 				{
 					// SoloRecord found by precise match, merge it
 					var hashCode = soloRecord.GetHashCode();
-					soloRecord.MergeFrom(extRecord, mustMatch: false);
+					soloRecord.MergeFrom(extRecord, mustMatch: false, mergeDate: isDatePrecise);
 					if (hashCode == soloRecord.GetHashCode())
 						result.SameCount += 1;
 					else
@@ -135,8 +136,34 @@ public class ExternalImportManager(
 				}
 
 				// external date is not precise, and no "close enough" score match was found
-				// ignore for now
+				if (soloRecords.Count == extRecords.Count)
+				{
+					// both lists likely contain the same gameplay records, so they can be matched later on
+					mergeAllRecords = true;
+					continue;
+				}
+
+				// scores can't be matched, add the external records as a last resort
+				recordManager.AddRecord(beatmapKey, extRecord);
+				result.AddCount += 1;
+			}
+
+			// check if records in both lists should be merged
+			if (!mergeAllRecords)
 				continue;
+			// sort by date to make sure each list represents the same timeline
+			soloRecords.Sort((r1, r2) => r1.Date.CompareTo(r2.Date));
+			extRecords.Sort((r1, r2) => r1.Date.CompareTo(r2.Date));
+
+			// merge all extRecords into soloRecords
+			foreach (var (soloRecord, extRecord) in soloRecords.Zip(extRecords, (r1, r2) => (r1, r2)))
+			{
+				var hashCode = soloRecord.GetHashCode();
+				soloRecord.MergeFrom(extRecord, mustMatch: false, mergeDate: isDatePrecise);
+				if (hashCode == soloRecord.GetHashCode())
+					result.SameCount += 1;
+				else
+					result.MergeCount += 1;
 			}
 		}
 	}
