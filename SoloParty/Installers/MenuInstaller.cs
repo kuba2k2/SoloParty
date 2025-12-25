@@ -22,6 +22,7 @@ internal class MenuInstaller(
 		Container.BindInterfacesTo<RankModelPatches>().AsSingle();
 
 		Container.BindInterfacesTo<PartyLeaderboardRecordProvider>().AsSingle();
+		Container.BindInterfacesTo<BeatSaviorDataRecordProvider>().AsSingle();
 
 		if (Plugin.LeaderboardCoreInstalled)
 		{
