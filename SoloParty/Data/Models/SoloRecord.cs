@@ -124,9 +124,9 @@ public class SoloRecord : IComparable<SoloRecord>
 		return ModifiedScore == other.ModifiedScore;
 	}
 
-	public void MergeFrom(SoloRecord other)
+	public void MergeFrom(SoloRecord other, bool mustMatch = true)
 	{
-		if (!Matches(other))
+		if (mustMatch && !Matches(other))
 			throw new ArgumentException("Records don't match");
 		if (Date % 1000 == 0)
 			Date = other.Date;
@@ -187,5 +187,27 @@ public class SoloRecord : IComparable<SoloRecord>
 			// since only the absolute difference of two Date fields counts, HashCode can't be used :(
 			return 0;
 		}
+	}
+
+	public override int GetHashCode()
+	{
+		var hashCode = new HashCode();
+		// ReSharper disable NonReadonlyMemberInGetHashCode
+		hashCode.Add(Date);
+		hashCode.Add(ModifiedScore);
+		hashCode.Add(MultipliedScore);
+		hashCode.Add(MaxModifiedScore);
+		hashCode.Add(MaxMultipliedScore);
+		hashCode.Add(GoodCutsCount);
+		hashCode.Add(BadCutsCount);
+		hashCode.Add(MissedCount);
+		hashCode.Add(MaxCombo);
+		hashCode.Add(NotesPassed);
+		hashCode.Add(NotesCount);
+		hashCode.Add((int)EndState);
+		hashCode.Add((int)Modifiers);
+		hashCode.Add(PlayerName);
+		// ReSharper restore NonReadonlyMemberInGetHashCode
+		return hashCode.ToHashCode();
 	}
 }
