@@ -109,7 +109,8 @@
 						pref-height="4.9"
 						anchor-pos-x="-0.5"
 						horizontal-fit="PreferredSize"
-						bg="panel-top-gradient"
+						bg="panel-top"
+						bg-color="#42A5F5"
 						bg-alpha="0.5"/>
 
 					<horizontal

@@ -21,6 +21,7 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("NotesPassed")] public int NotesPassed { get; internal set; } = -1;
 	[JsonProperty("NotesCount")] public int NotesCount { get; internal set; } = -1;
 	[JsonProperty("Pauses")] public int Pauses { get; internal set; } = -1;
+	[JsonProperty("NoteJumpOffset")] public int NoteJumpOffset { get; internal set; } = -1;
 	[JsonProperty("EndState")] public EndState EndState { get; internal set; } = EndState.Unknown;
 	[JsonProperty("Modifiers")] public Modifier Modifiers { get; internal set; } = Modifier.None;
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }

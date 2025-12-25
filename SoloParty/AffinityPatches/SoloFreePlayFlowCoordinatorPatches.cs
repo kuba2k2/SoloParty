@@ -107,7 +107,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		// player name chooser disabled, save results and call the original method
 		if (!config.SoloChooserEnabled)
 		{
-			SaveResults(beatmapKey, levelCompletionResults, transformedBeatmapData, date, null);
+			SaveResults(__instance, beatmapKey, levelCompletionResults, transformedBeatmapData, date, null);
 			return true;
 		}
 
@@ -116,7 +116,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 		enterNameViewController.Init((_, playerName) =>
 		{
 			log.Info($"Got player name '{playerName}'");
-			SaveResults(beatmapKey, levelCompletionResults, transformedBeatmapData, date, playerName);
+			SaveResults(__instance, beatmapKey, levelCompletionResults, transformedBeatmapData, date, playerName);
 
 			// redirect the PresentViewController() call to ReplaceTopViewController()
 			_replaceNextViewController = true;
@@ -137,6 +137,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 	}
 
 	private void SaveResults(
+		SoloFreePlayFlowCoordinator coordinator,
 		BeatmapKey beatmapKey,
 		LevelCompletionResults levelCompletionResults,
 		IReadonlyBeatmapData beatmapData,
@@ -222,6 +223,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			NotesPassed = notesPassed,
 			NotesCount = notesCount,
 			Pauses = GamePausePatches.Pauses,
+			NoteJumpOffset = (int)(coordinator.playerSettings.noteJumpStartBeatOffset * 100),
 			EndState = endState,
 			Modifiers = levelCompletionResults.gameplayModifiers.ToSoloModifier(),
 			PlayerName = playerName,

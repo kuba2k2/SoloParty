@@ -43,6 +43,15 @@ internal class LeaderboardViewRow
 		{ RankModel.Rank.E, "#FF0000" }
 	};
 
+	private readonly Dictionary<int, string> _noteJumpOffsetMap = new()
+	{
+		{ -50, "<color=red>Close</color>" },
+		{ -25, "<color=#FBC02D>Closer</color>" },
+		{ 0, "Default" },
+		{ 25, "<color=blue>Further</color>" },
+		{ 50, "<color=green>Far</color>" }
+	};
+
 	private const string DimColor = "#ABABAB";
 	private const string FullComboColor = "#88FF88";
 	private const string NoMistakesColor = "#FFFFFF";
@@ -114,6 +123,8 @@ internal class LeaderboardViewRow
 		var hint = record.MaxCombo == -1 ? "" : $"Max Combo -  {record.MaxCombo}";
 		if (record.Pauses != -1)
 			hint += $"<br>Pauses -  {record.Pauses}";
+		if (record.NoteJumpOffset != -1 && _noteJumpOffsetMap.TryGetValue(record.NoteJumpOffset, out var njo))
+			hint += $"<br>NJO -  {njo}";
 		_score.text = $"{score}";
 		_score.SetHint(hint);
 	}
