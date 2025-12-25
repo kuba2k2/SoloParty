@@ -221,6 +221,7 @@ internal sealed class SoloFreePlayFlowCoordinatorPatches(
 			MaxCombo = levelCompletionResults.maxCombo,
 			NotesPassed = notesPassed,
 			NotesCount = notesCount,
+			Pauses = GamePausePatches.Pauses,
 			EndState = endState,
 			Modifiers = levelCompletionResults.gameplayModifiers.ToSoloModifier(),
 			PlayerName = playerName,

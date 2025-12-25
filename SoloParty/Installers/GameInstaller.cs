@@ -8,5 +8,6 @@ internal class GameInstaller : Installer
 	public override void InstallBindings()
 	{
 		Container.BindInterfacesTo<GameEnergyCounterPatches>().AsSingle();
+		Container.BindInterfacesTo<GamePausePatches>().AsSingle();
 	}
 }

@@ -20,6 +20,7 @@ public class SoloRecord : IComparable<SoloRecord>
 	[JsonProperty("MaxCombo")] public int MaxCombo { get; internal set; } = -1;
 	[JsonProperty("NotesPassed")] public int NotesPassed { get; internal set; } = -1;
 	[JsonProperty("NotesCount")] public int NotesCount { get; internal set; } = -1;
+	[JsonProperty("Pauses")] public int Pauses { get; internal set; } = -1;
 	[JsonProperty("EndState")] public EndState EndState { get; internal set; } = EndState.Unknown;
 	[JsonProperty("Modifiers")] public Modifier Modifiers { get; internal set; } = Modifier.None;
 	[JsonProperty("PlayerName")] public string? PlayerName { get; internal set; }
@@ -56,6 +57,7 @@ public class SoloRecord : IComparable<SoloRecord>
 		       $"MaxCombo = {MaxCombo}, " +
 		       $"NotesPassed = {NotesPassed}, " +
 		       $"NotesCount = {NotesCount}, " +
+		       $"Pauses = {Pauses}, " +
 		       $"EndState = {EndState}, " +
 		       $"Modifiers = {Modifiers.ToModifierString()}, " +
 		       $"PlayerName = {PlayerName}, " +
@@ -150,6 +152,8 @@ public class SoloRecord : IComparable<SoloRecord>
 			NotesPassed = other.NotesPassed;
 		if (NotesCount == -1 && other.NotesCount != -1)
 			NotesCount = other.NotesCount;
+		if (Pauses == -1 && other.Pauses != -1)
+			Pauses = other.Pauses;
 		if (EndState == EndState.Unknown && other.EndState != EndState.Unknown)
 			EndState = other.EndState;
 		if (Modifiers == Modifier.None && other.Modifiers != Modifier.None)
@@ -206,6 +210,7 @@ public class SoloRecord : IComparable<SoloRecord>
 		hashCode.Add(MaxCombo);
 		hashCode.Add(NotesPassed);
 		hashCode.Add(NotesCount);
+		hashCode.Add(Pauses);
 		hashCode.Add((int)EndState);
 		hashCode.Add((int)Modifiers);
 		hashCode.Add(PlayerName);

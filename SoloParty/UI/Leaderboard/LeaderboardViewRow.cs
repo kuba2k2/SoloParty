@@ -112,6 +112,8 @@ internal class LeaderboardViewRow
 
 		var score = record.ModifiedScore.ToString("N0", _numberFormat);
 		var hint = record.MaxCombo == -1 ? "" : $"Max Combo -  {record.MaxCombo}";
+		if (record.Pauses != -1)
+			hint += $"<br>Pauses -  {record.Pauses}";
 		_score.text = $"{score}";
 		_score.SetHint(hint);
 	}
