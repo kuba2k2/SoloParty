@@ -7,7 +7,7 @@
 		<PluginId>SoloParty</PluginId>
 		<PluginName>SoloParty</PluginName>
 		<Authors>kuba2k2</Authors>
-		<Version>0.1.0</Version>
+		<Version>1.0.0</Version>
 		<GameVersion>1.40.3</GameVersion>
 		<Description>Per-player scores and local leaderboard in Solo mode</Description>
 		<!--<PluginIcon></PluginIcon>-->
